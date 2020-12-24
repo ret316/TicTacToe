@@ -15,7 +15,7 @@ using TicTacToe.BL.Extensions;
 using TicTacToe.DL.Extensions;
 using TicTacToe.DL.Config;
 using TicTacToe.WebApi.Services;
-using TicTacToe.WebApi.Services.Impementation;
+using TicTacToe.WebApi.Services.Implementation;
 
 namespace TicTacToe
 {
@@ -35,7 +35,7 @@ namespace TicTacToe
             services.AddScoped<IUserService, UserService>();
             services.AddDbContext<DataBaseContext>(options =>
             {
-                options.UseNpgsql(Configuration.GetConnectionString("DBConString"));
+                options.UseNpgsql(Configuration.GetConnectionString("DbConString"), x => x.MigrationsAssembly("TicTacToe.DL"));
             });
             services.AddBusinessLayerCollection();
             services.AddDataLayerCollection();
