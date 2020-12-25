@@ -6,7 +6,7 @@ using TicTacToe.BL.Models;
 
 namespace TicTacToe.BL.Services
 {
-    public interface IUserServiceBL 
+    public interface IUserServiceBL : IAuthenticationBL
     {
         Task<IEnumerable<UserBL>> GetAllUsersAsync(int pageNumber, int pageSize);
         Task<UserBL> GetUserAsync(Guid id);

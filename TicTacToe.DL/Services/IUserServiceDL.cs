@@ -10,6 +10,7 @@ namespace TicTacToe.DL.Services
     {
         Task<IEnumerable<UserDL>> GetAllUsersAsync(int pageNumber, int pageSize);
         Task<UserDL> GetUserAsync(Guid id);
+        Task<UserDL> GetUserAsync(string email);
         Task CreateUserAsync(UserDL user);
         Task UpdateUserAsync(UserDL user);
         Task DeleteUserAsync(UserDL user);

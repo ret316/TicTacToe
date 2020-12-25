@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TicTacToe.BL.Models;
 using TicTacToe.BL.Services;
-using TicTacToe.Models;
+using TicTacToe.WebApi.Models;
 
 namespace TicTacToe.WebApi.Services.Implementation
 {
@@ -16,10 +16,10 @@ namespace TicTacToe.WebApi.Services.Implementation
             this._userServiceBL = userServiceBL;
         }
 
-        public async Task<IEnumerable<UserViewModel>> GetAllUsersAsync(int pageNumber, int pageSize)
+        public async Task<IEnumerable<UserModel>> GetAllUsersAsync(int pageNumber, int pageSize)
         {
             var users = await _userServiceBL.GetAllUsersAsync(pageNumber, pageSize);
-            return users.Select(u => new UserViewModel
+            return users.Select(u => new UserModel
             {
                 Id = u.Id,
                 Name = u.Name,
@@ -28,13 +28,13 @@ namespace TicTacToe.WebApi.Services.Implementation
             });
         }
 
-        public async Task<UserViewModel> GetUserAsync(Guid id)
+        public async Task<UserModel> GetUserAsync(Guid id)
         {
             var user = await _userServiceBL.GetUserAsync(id);
 
             if (!(user is null))
             {
-                return new UserViewModel
+                return new UserModel
                 {
                     Id = user.Id,
                     Name = user.Name,
@@ -46,7 +46,7 @@ namespace TicTacToe.WebApi.Services.Implementation
             return null;
         }
 
-        public async Task CreateUserAsync(UserViewModel user)
+        public async Task CreateUserAsync(UserModel user)
         {
             await _userServiceBL.CreateUserAsync(new UserBL
             {
@@ -56,7 +56,7 @@ namespace TicTacToe.WebApi.Services.Implementation
             });
         }
 
-        public async Task UpdateUserAsync(UserViewModel user)
+        public async Task UpdateUserAsync(UserModel user)
         {
             await _userServiceBL.UpdateUserAsync(new UserBL
             {
@@ -70,6 +70,24 @@ namespace TicTacToe.WebApi.Services.Implementation
         public async Task DeleteUserAsync(Guid id)
         {
             await _userServiceBL.DeleteUserAsync(id);
+        }
+
+        public async Task<AuthUserModel> Authenticate(UserAuthModel user)
+        {
+           var userAuth = await _userServiceBL.Authenticate(user.Email, user.Password);
+
+           if (userAuth is null)
+           {
+               return null;
+           }
+
+           return new AuthUserModel
+           {
+               Id = userAuth.Id,
+               Name = userAuth.Name,
+               Email = user.Email,
+               Token = userAuth.Token
+           };
         }
     }
 }

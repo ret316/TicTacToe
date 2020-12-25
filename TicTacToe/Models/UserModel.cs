@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace TicTacToe.Models
+namespace TicTacToe.WebApi.Models
 {
-    public class UserViewModel
+    public class UserModel
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

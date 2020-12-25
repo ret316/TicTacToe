@@ -27,6 +27,11 @@ namespace TicTacToe.DL.Services.Implementation
             return await _dataBaseContext.Users.FirstOrDefaultAsync(u => u.Id == id);
         }
 
+        public async Task<UserDL> GetUserAsync(string email)
+        {
+            return await _dataBaseContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+        }
+
         public async Task CreateUserAsync(UserDL user)
         {
             await _dataBaseContext.Users.AddAsync(new UserDL

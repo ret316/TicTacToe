@@ -10,12 +10,14 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using TicTacToe.BL.Extensions;
 using TicTacToe.DL.Extensions;
 using TicTacToe.DL.Config;
 using TicTacToe.WebApi.Services;
 using TicTacToe.WebApi.Services.Implementation;
+using TicTacToe.BL.Config;
 
 namespace TicTacToe
 {
@@ -37,7 +39,12 @@ namespace TicTacToe
             {
                 options.UseNpgsql(Configuration.GetConnectionString("DbConString"), x => x.MigrationsAssembly("TicTacToe.DL"));
             });
-            services.AddBusinessLayerCollection();
+            var appSettingsSection = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsSection);
+
+            var key = Encoding.ASCII.GetBytes(appSettingsSection.Get<AppSettings>().Secret);
+
+            services.AddBusinessLayerCollection(key);
             services.AddDataLayerCollection();
         }
 

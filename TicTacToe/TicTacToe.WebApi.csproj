@@ -9,5 +9,9 @@
     <ProjectReference Include="..\TicTacToe.DL\TicTacToe.DL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Config\" />
+  </ItemGroup>
+
 
 </Project>
