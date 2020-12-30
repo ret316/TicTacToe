@@ -10,8 +10,8 @@ namespace TicTacToe.BL.Services
     {
         Task<IEnumerable<UserBL>> GetAllUsersAsync(int pageNumber, int pageSize);
         Task<UserBL> GetUserAsync(Guid id);
-        Task CreateUserAsync(UserBL user);
-        Task UpdateUserAsync(UserBL user);
-        Task DeleteUserAsync(Guid id);
+        Task<bool> CreateUserAsync(UserBL user);
+        Task<bool> UpdateUserAsync(UserBL user);
+        Task<bool> DeleteUserAsync(Guid id);
     }
 }

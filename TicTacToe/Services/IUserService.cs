@@ -11,8 +11,8 @@ namespace TicTacToe.WebApi.Services
     {
         Task<IEnumerable<UserModel>> GetAllUsersAsync(int pageNumber, int pageSize);
         Task<UserModel> GetUserAsync(Guid id);
-        Task CreateUserAsync(UserModel user);
-        Task UpdateUserAsync(UserModel user);
-        Task DeleteUserAsync(Guid id);
+        Task<bool> CreateUserAsync(UserModel user);
+        Task<bool> UpdateUserAsync(UserModel user);
+        Task<bool> DeleteUserAsync(Guid id);
     }
 }

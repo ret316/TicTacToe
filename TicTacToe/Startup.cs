@@ -35,17 +35,14 @@ namespace TicTacToe
         {
             services.AddControllers();
             services.AddScoped<IUserService, UserService>();
-            services.AddDbContext<DataBaseContext>(options =>
-            {
-                options.UseNpgsql(Configuration.GetConnectionString("DbConString"), x => x.MigrationsAssembly("TicTacToe.DL"));
-            });
+            services.AddScoped<IGameService, GameService>();
+            services.AddScoped<IStatisticService, StatisticService>();
+            var connection = Configuration.GetConnectionString("DbConString");
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
-
             var key = Encoding.ASCII.GetBytes(appSettingsSection.Get<AppSettings>().Secret);
-
             services.AddBusinessLayerCollection(key);
-            services.AddDataLayerCollection();
+            services.AddDataLayerCollection(connection);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,6 +57,7 @@ namespace TicTacToe
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

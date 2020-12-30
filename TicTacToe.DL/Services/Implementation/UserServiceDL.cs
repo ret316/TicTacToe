@@ -11,7 +11,7 @@ namespace TicTacToe.DL.Services.Implementation
 {
     public class UserServiceDL : IUserServiceDL
     {
-        private DataBaseContext _dataBaseContext;
+        private readonly DataBaseContext _dataBaseContext;
         public UserServiceDL(DataBaseContext dataBaseContext)
         {
             this._dataBaseContext = dataBaseContext;
@@ -34,14 +34,7 @@ namespace TicTacToe.DL.Services.Implementation
 
         public async Task CreateUserAsync(UserDL user)
         {
-            await _dataBaseContext.Users.AddAsync(new UserDL
-            {
-                Id = user.Id,
-                Name = user.Name,
-                Email = user.Email,
-                Password = user.Password
-            });
-
+            await _dataBaseContext.Users.AddAsync(user);
             await _dataBaseContext.SaveChangesAsync();
         }
 

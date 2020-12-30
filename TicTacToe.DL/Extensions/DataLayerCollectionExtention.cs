@@ -12,9 +12,15 @@ namespace TicTacToe.DL.Extensions
 {
     public static class DataLayerCollectionExtention
     {
-        public static IServiceCollection AddDataLayerCollection(this IServiceCollection services)
+        public static IServiceCollection AddDataLayerCollection(this IServiceCollection services, string connectionString)
         {
+            services.AddDbContext<DataBaseContext>(options =>
+            {
+                options.UseNpgsql(connectionString);
+            });
             services.AddScoped<IUserServiceDL, UserServiceDL>();
+            services.AddScoped<IGameServiceDL, GameServiceDL>();
+            services.AddScoped<IStatisticServiceDL, StatisticServiceDL>();
             return services;
         }
     }

@@ -60,53 +60,81 @@ namespace TicTacToe.BL.Services.Implementation
             return null;
         }
 
-        public async Task CreateUserAsync(UserBL user)
+        public async Task<bool> CreateUserAsync(UserBL user)
         {
             if (string.IsNullOrWhiteSpace(user.Password))
             {
-                return;
+                return false;
             }
             else if (await _userServiceDL.GetUserAsync(user.Email) != null)
             {
-                return;
+                return false;
             }
 
             var password = GetPassHash(user.Password);
-
-            await _userServiceDL.CreateUserAsync(new UserDL
+            try
             {
-                Id = Guid.NewGuid(),
-                Name = user.Name,
-                Email = user.Email,
-                Password = password.hash,
-                PasswordSalt = password.salt
-            });
-        }
-
-        public async Task UpdateUserAsync(UserBL user)
-        {
-            var userDB = await _userServiceDL.GetUserAsync(user.Id);
-            var password = GetPassHash(user.Password);
-
-            if (userDB != null)
-            {
-                await _userServiceDL.UpdateUserAsync(new UserDL
+                await _userServiceDL.CreateUserAsync(new UserDL
                 {
-                    Id = user.Id,
+                    Id = Guid.NewGuid(),
                     Name = user.Name,
                     Email = user.Email,
                     Password = password.hash,
                     PasswordSalt = password.salt
                 });
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
             }
         }
 
-        public async Task DeleteUserAsync(Guid id)
+        public async Task<bool> UpdateUserAsync(UserBL user)
         {
-            await _userServiceDL.DeleteUserAsync(new UserDL
+            if (!user.Id.HasValue)
             {
-                Id = id
-            });
+                return false;
+            }
+
+            var userDB = await _userServiceDL.GetUserAsync(user.Id.Value);
+            var password = GetPassHash(user.Password);
+
+            try
+            {
+                if (userDB != null)
+                {
+                    userDB.Name = user.Name;
+                    userDB.Email = user.Email;
+                    userDB.Password = password.hash;
+                    userDB.PasswordSalt = password.salt;
+                        
+                    await _userServiceDL.UpdateUserAsync(userDB);
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> DeleteUserAsync(Guid id)
+        {
+            //var result = true;
+            try
+            {
+                await _userServiceDL.DeleteUserAsync(new UserDL
+                {
+                    Id = id
+                });
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         public async Task<AuthUserModelBL> Authenticate(string email, string password)

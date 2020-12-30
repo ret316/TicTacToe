@@ -46,48 +46,72 @@ namespace TicTacToe.WebApi.Services.Implementation
             return null;
         }
 
-        public async Task CreateUserAsync(UserModel user)
+        public async Task<bool> CreateUserAsync(UserModel user)
         {
-            await _userServiceBL.CreateUserAsync(new UserBL
+            try
             {
-                Name = user.Name,
-                Email = user.Email,
-                Password = user.Password
-            });
+                await _userServiceBL.CreateUserAsync(new UserBL
+                {
+                    Name = user.Name,
+                    Email = user.Email,
+                    Password = user.Password
+                });
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
-        public async Task UpdateUserAsync(UserModel user)
+        public async Task<bool> UpdateUserAsync(UserModel user)
         {
-            await _userServiceBL.UpdateUserAsync(new UserBL
+            try
             {
-                Id = user.Id,
-                Name = user.Name,
-                Email = user.Email,
-                Password = user.Password
-            });
+                await _userServiceBL.UpdateUserAsync(new UserBL
+                {
+                    Id = user.Id.Value,
+                    Name = user.Name,
+                    Email = user.Email,
+                    Password = user.Password
+                });
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
-        public async Task DeleteUserAsync(Guid id)
+        public async Task<bool> DeleteUserAsync(Guid id)
         {
-            await _userServiceBL.DeleteUserAsync(id);
+            try
+            {
+                await _userServiceBL.DeleteUserAsync(id);
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
         }
 
         public async Task<AuthUserModel> Authenticate(UserAuthModel user)
         {
-           var userAuth = await _userServiceBL.Authenticate(user.Email, user.Password);
+            var userAuth = await _userServiceBL.Authenticate(user.Email, user.Password);
 
-           if (userAuth is null)
-           {
-               return null;
-           }
+            if (userAuth is null)
+            {
+                return null;
+            }
 
-           return new AuthUserModel
-           {
-               Id = userAuth.Id,
-               Name = userAuth.Name,
-               Email = user.Email,
-               Token = userAuth.Token
-           };
+            return new AuthUserModel
+            {
+                Id = userAuth.Id,
+                Name = userAuth.Name,
+                Email = user.Email,
+                Token = userAuth.Token
+            };
         }
     }
 }

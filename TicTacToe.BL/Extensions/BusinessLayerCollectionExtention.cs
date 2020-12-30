@@ -47,6 +47,10 @@ namespace TicTacToe.BL.Extensions
                     };
                 });
             services.AddScoped<IUserServiceBL, UserServiceBL>();
+            services.AddScoped<IGameServiceBL, GameServiceBL>();
+            services.AddScoped<IFieldChecker, FIeldChecker>();
+            services.AddScoped<IStatisticServiceBL, StatisticServiceBL>();
+            services.AddScoped<IBotService, BotService>();
             return services;
         }
     }

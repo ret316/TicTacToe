@@ -27,7 +27,7 @@ namespace TicTacToe.WebApi.Controllers
 
             if (users is null || !users.Any())
             {
-                return NotFound("No records");
+                return NoContent();
             }
 
             return Ok(users);
@@ -41,7 +41,7 @@ namespace TicTacToe.WebApi.Controllers
 
             if (user is null)
             {
-                return NotFound("User not found");
+                return NoContent();
             }
 
             return Ok(user);
@@ -49,29 +49,49 @@ namespace TicTacToe.WebApi.Controllers
 
         // POST api/<UsersController>
         [HttpPost]
-        public async Task CreateUserAsync([FromBody] UserModel user)
+        public async Task<IActionResult> CreateUserAsync([FromBody] UserModel user)
         {
-            await _userService.CreateUserAsync(user);
+            var result = await _userService.CreateUserAsync(user);
+
+            if (!result)
+            {
+                return BadRequest();
+            }
+            return Ok();
         }
 
         // PUT api/<UsersController>/5
         [HttpPut("{id}")]
-        public async Task UpdateUserAsync(Guid id, [FromBody] UserModel user)
+        public async Task<IActionResult> UpdateUserAsync(Guid id, [FromBody] UserModel user)
         {
-            await _userService.UpdateUserAsync(new UserModel
+            var result = await _userService.UpdateUserAsync(new UserModel
             {
                 Id = id,
                 Name = user.Name,
                 Email = user.Email,
                 Password = user.Password
             });
+
+            if (!result)
+            {
+                return BadRequest();
+            }
+
+            return Ok();
         }
 
         // DELETE api/<UsersController>/5
         [HttpDelete("{id}")]
-        public async Task DeleteUserAsync(Guid id)
+        public async Task<IActionResult> DeleteUserAsync(Guid id)
         {
-            await _userService.DeleteUserAsync(id);
+            var result = await _userService.DeleteUserAsync(id);
+
+            if (!result)
+            {
+                return BadRequest();
+            }
+
+            return Ok();
         }
 
         [AllowAnonymous]
@@ -81,7 +101,7 @@ namespace TicTacToe.WebApi.Controllers
             var user = await _userService.Authenticate(model);
             if (user is null)
             {
-                return BadRequest();
+                return NoContent();
             }
 
             return Ok(user);
