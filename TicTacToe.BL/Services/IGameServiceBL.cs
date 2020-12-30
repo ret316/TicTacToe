@@ -11,7 +11,7 @@ namespace TicTacToe.BL.Services
     {
         Task<IEnumerable<GameBL>> GetGamesByUserAsync(Guid id);
         Task<GameBL> GetGameByGameIdAsync(Guid id);
-        Task CreateGameAsync(GameBL game);
+        Task<bool> CreateGameAsync(GameBL game);
         Task<CheckStateBL> SavePlayerMoveAsync(GameHistoryBL historyBL);
         Task SetGameAsFinished(Guid game);
         //Task SaveGameResult(GameResultBL gameResult);

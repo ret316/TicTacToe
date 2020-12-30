@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using TicTacToe.BL.Services;
 using TicTacToe.WebApi.Models;
 
@@ -10,35 +11,23 @@ namespace TicTacToe.WebApi.Services.Implementation
     public class StatisticService : IStatisticService
     {
         private readonly IStatisticServiceBL _statisticServiceBL;
-
-        public StatisticService(IStatisticServiceBL statisticServiceBL)
+        private readonly IMapper _mapper;
+        public StatisticService(IStatisticServiceBL statisticServiceBL, IMapper mapper)
         {
             this._statisticServiceBL = statisticServiceBL;
+            this._mapper = mapper;
         }
 
         public async Task<IEnumerable<GameResultModel>> GetAllUserGamesAsync(Guid id)
         {
             var results = await _statisticServiceBL.GetAllUserGamesAsync(id);
-            return results.Select(r => new GameResultModel
-            {
-                GameId = r.GameId,
-                PlayerId = r.PlayerId,
-                Result = (ResultStatus) (int) r.Result
-            });
+            return results.Select(r => _mapper.Map<GameResultModel>(r));
         }
 
         public async Task<IEnumerable<GameHistoryModel>> GetGameHistoryAsync(Guid id)
         {
             var results = await _statisticServiceBL.GetGameHistoryAsync(id);
-            return results.Select(r => new GameHistoryModel
-            {
-                GameId = r.GameId,
-                PlayerId = r.PlayerId,
-                IsBot = r.IsBot,
-                XAxis = r.XAxis,
-                YAxis = r.YAxis,
-                MoveDate = r.MoveDate
-            });
+            return results.Select(r => _mapper.Map<GameHistoryModel>(r));
         }
     }
 }

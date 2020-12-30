@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using TicTacToe.BL.Models;
 using TicTacToe.BL.Services;
 using TicTacToe.WebApi.Enum;
@@ -12,13 +13,16 @@ namespace TicTacToe.WebApi.Services.Implementation
     public class GameService : IGameService
     {
         private readonly IGameServiceBL _gameServiceBL;
-        public GameService(IGameServiceBL gameServiceBL)
+        private readonly IMapper _mapper;
+        public GameService(IGameServiceBL gameServiceBL, IMapper mapper)
         {
             this._gameServiceBL = gameServiceBL;
+            this._mapper = mapper;
         }
-        public async Task CreateGameAsync(GameModel game)
+        public async Task<bool> CreateGameAsync(GameModel game)
         {
-            await _gameServiceBL.CreateGameAsync(new GameBL
+
+            return await _gameServiceBL.CreateGameAsync(new GameBL
             {
                 Player1Id = game.Player1Id,
                 Player2Id = game.Player2Id,
@@ -29,27 +33,12 @@ namespace TicTacToe.WebApi.Services.Implementation
         public async Task<IEnumerable<GameModel>> GetGamesByUserAsync(Guid id)
         {
             var games = await _gameServiceBL.GetGamesByUserAsync(id);
-            return games.Select(g => new GameModel
-            {
-                GameId = g.GameId.Value,
-                Player1Id = g.Player1Id,
-                Player2Id = g.Player2Id,
-                IsPlayer2Bot = g.IsPlayer2Bot,
-                IsGameFinished = g.IsGameFinished
-            });
+            return games.Select(g => _mapper.Map<GameModel>(g));
         }
 
         public async Task<CheckState> SavePlayerMoveAsync(GameHistoryModel history)
         {
-           var playerMoveResult = await _gameServiceBL.SavePlayerMoveAsync(new GameHistoryBL
-            {
-                GameId = history.GameId,
-                PlayerId = history.PlayerId,
-                IsBot = history.IsBot,
-                XAxis = history.XAxis,
-                YAxis = history.YAxis,
-                MoveDate = history.MoveDate ?? DateTime.Now
-            });
+           var playerMoveResult = await _gameServiceBL.SavePlayerMoveAsync(_mapper.Map<GameHistoryBL>(history));
            return (CheckState) (int) playerMoveResult;
         }
     }

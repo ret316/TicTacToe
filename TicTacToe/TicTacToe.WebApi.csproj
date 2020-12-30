@@ -5,12 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TicTacToe.BL\TicTacToe.BL.csproj" />
-    <ProjectReference Include="..\TicTacToe.DL\TicTacToe.DL.csproj" />
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Config\" />
+    <ProjectReference Include="..\TicTacToe.BL\TicTacToe.BL.csproj" />
+    <ProjectReference Include="..\TicTacToe.DL\TicTacToe.DL.csproj" />
   </ItemGroup>
 
 

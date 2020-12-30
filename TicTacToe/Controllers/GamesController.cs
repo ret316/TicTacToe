@@ -24,9 +24,14 @@ namespace TicTacToe.WebApi.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> CreateGame([FromBody] GameModel gameModel)
         {
-            await _gameService.CreateGameAsync(gameModel);
+            var result = await _gameService.CreateGameAsync(gameModel);
 
-            return Ok();
+            if (result)
+            {
+                return Ok();
+            }
+
+            return BadRequest();
         }
 
         [HttpPost("move")]
@@ -48,14 +53,14 @@ namespace TicTacToe.WebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllGamesForUser(Guid userId)
         {
-           var games = await _gameService.GetGamesByUserAsync(userId);
+            var games = await _gameService.GetGamesByUserAsync(userId);
 
-           if (games.Any())
-           {
-               return Ok(games);
-           }
+            if (games.Any())
+            {
+                return Ok(games);
+            }
 
-           return NoContent();
+            return NoContent();
         }
     }
 }

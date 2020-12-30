@@ -10,7 +10,7 @@ namespace TicTacToe.WebApi.Services
     public interface IGameService
     {
         Task<IEnumerable<GameModel>> GetGamesByUserAsync(Guid id);
-        Task CreateGameAsync(GameModel game);
+        Task<bool> CreateGameAsync(GameModel game);
         Task<CheckState> SavePlayerMoveAsync(GameHistoryModel history);
     }
 }

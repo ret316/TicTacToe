@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using TicTacToe.BL.Models;
 using TicTacToe.BL.Services;
 using TicTacToe.WebApi.Models;
@@ -11,51 +12,32 @@ namespace TicTacToe.WebApi.Services.Implementation
     public class UserService : IUserService
     {
         private readonly IUserServiceBL _userServiceBL;
-        public UserService(IUserServiceBL userServiceBL)
+        private readonly IMapper _mapper;
+        public UserService(IUserServiceBL userServiceBL, IMapper mapper)
         {
             this._userServiceBL = userServiceBL;
+            this._mapper = mapper;
         }
 
         public async Task<IEnumerable<UserModel>> GetAllUsersAsync(int pageNumber, int pageSize)
         {
             var users = await _userServiceBL.GetAllUsersAsync(pageNumber, pageSize);
-            return users.Select(u => new UserModel
-            {
-                Id = u.Id,
-                Name = u.Name,
-                Email = u.Email,
-                Password = u.Password
-            });
+
+            return users.Select(u => _mapper.Map<UserModel>(u));
         }
 
         public async Task<UserModel> GetUserAsync(Guid id)
         {
             var user = await _userServiceBL.GetUserAsync(id);
 
-            if (!(user is null))
-            {
-                return new UserModel
-                {
-                    Id = user.Id,
-                    Name = user.Name,
-                    Email = user.Email,
-                    Password = user.Password
-                };
-            }
-
-            return null;
+            return _mapper.Map<UserModel>(user);
         }
 
         public async Task<bool> CreateUserAsync(UserModel user)
         {
             try
             {
-                await _userServiceBL.CreateUserAsync(new UserBL
-                {
-                    Name = user.Name,
-                    Email = user.Email,
-                    Password = user.Password
-                });
+                await _userServiceBL.CreateUserAsync(_mapper.Map<UserBL>(user));
                 return true;
             }
             catch (Exception ex)
@@ -68,13 +50,7 @@ namespace TicTacToe.WebApi.Services.Implementation
         {
             try
             {
-                await _userServiceBL.UpdateUserAsync(new UserBL
-                {
-                    Id = user.Id.Value,
-                    Name = user.Name,
-                    Email = user.Email,
-                    Password = user.Password
-                });
+                await _userServiceBL.UpdateUserAsync(_mapper.Map<UserBL>(user));
                 return true;
             }
             catch (Exception ex)
@@ -100,18 +76,7 @@ namespace TicTacToe.WebApi.Services.Implementation
         {
             var userAuth = await _userServiceBL.Authenticate(user.Email, user.Password);
 
-            if (userAuth is null)
-            {
-                return null;
-            }
-
-            return new AuthUserModel
-            {
-                Id = userAuth.Id,
-                Name = userAuth.Name,
-                Email = user.Email,
-                Token = userAuth.Token
-            };
+            return _mapper.Map<AuthUserModel>(userAuth);
         }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using TicTacToe.BL.Services;
@@ -14,6 +15,7 @@ namespace TicTacToe.BL.Extensions
     {
         public static IServiceCollection AddBusinessLayerCollection(this IServiceCollection services, byte[] key)
         {
+            services.AddAutoMapper(typeof(TicTacToe.BL.Config.MapperProfile).Assembly);
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

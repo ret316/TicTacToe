@@ -20,7 +20,6 @@ namespace TicTacToe.BL.Services.Implementation
             set => _nextMove = value;
         }
 
-
         public void BoardInit(IEnumerable<GameHistoryBL> gameHistories)
         {
             this._gameHistory = gameHistories;

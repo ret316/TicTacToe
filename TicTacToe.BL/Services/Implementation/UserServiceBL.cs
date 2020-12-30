@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using TicTacToe.BL.Config;
@@ -19,10 +20,12 @@ namespace TicTacToe.BL.Services.Implementation
     {
         private readonly IUserServiceDL _userServiceDL;
         private readonly string _appSettings;
-        public UserServiceBL(IUserServiceDL userServiceDL, IOptions<AppSettings> appSettings)
+        private readonly IMapper _mapper;
+        public UserServiceBL(IUserServiceDL userServiceDL, IOptions<AppSettings> appSettings, IMapper mapper)
         {
             this._userServiceDL = userServiceDL;
             this._appSettings = appSettings.Value.Secret;
+            this._mapper = mapper;
         }
 
         public async Task<IEnumerable<UserBL>> GetAllUsersAsync(int pageNumber, int pageSize)
@@ -33,31 +36,15 @@ namespace TicTacToe.BL.Services.Implementation
             }
 
             var users = await _userServiceDL.GetAllUsersAsync(pageNumber, pageSize);
-            return users.Select(u => new UserBL
-            {
-                Id = u.Id,
-                Name = u.Name,
-                Email = u.Email,
-                //Password = u.Password
-            });
+
+            return users.Select(u => _mapper.Map<UserBL>(u));
         }
 
         public async Task<UserBL> GetUserAsync(Guid id)
         {
             var user = await _userServiceDL.GetUserAsync(id);
 
-            if (!(user is null))
-            {
-                return new UserBL
-                {
-                    Id = user.Id,
-                    Name = user.Name,
-                    Email = user.Email,
-                    //Password = user.Password
-                };
-            }
-
-            return null;
+            return _mapper.Map<UserBL>(user);
         }
 
         public async Task<bool> CreateUserAsync(UserBL user)
@@ -188,12 +175,9 @@ namespace TicTacToe.BL.Services.Implementation
             using (var sha = new HMACSHA512(user.PasswordSalt))
             {
                 var hash = sha.ComputeHash(Encoding.UTF8.GetBytes(password));
-                for (int i = 0; i < hash.Length; i++)
+                if (hash.Where((t, i) => t != user.Password[i]).Any())
                 {
-                    if (hash[i] != user.Password[i])
-                    {
-                        return false;
-                    }
+                    return false;
                 }
             }
 
