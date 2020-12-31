@@ -32,7 +32,6 @@ namespace TicTacToe.BL.Extensions
                             var user = userService.GetUserAsync(userId).Result;
                             if (user == null)
                             {
-                                // return unauthorized if user no longer exists
                                 context.Fail("Unauthorized");
                             }
                             return Task.CompletedTask;

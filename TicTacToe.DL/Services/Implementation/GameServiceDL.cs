@@ -44,7 +44,7 @@ namespace TicTacToe.DL.Services.Implementation
             await _dataBaseContext.SaveChangesAsync();
         }
 
-        public async Task SetGameAsFinisheed(GameDL game)
+        public async Task SetGameAsFinished(GameDL game)
         {
             _dataBaseContext.Entry(game).State = EntityState.Modified;
             await _dataBaseContext.SaveChangesAsync();

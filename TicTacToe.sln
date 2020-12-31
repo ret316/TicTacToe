@@ -5,9 +5,17 @@ VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicTacToe.WebApi", "TicTacToe\TicTacToe.WebApi.csproj", "{BF0F50FC-5AF6-4774-8669-59BD306B8806}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToe.BL", "TicTacToe.BL\TicTacToe.BL.csproj", "{52BD9709-0252-4E02-ACD0-9226E90508E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicTacToe.BL", "TicTacToe.BL\TicTacToe.BL.csproj", "{52BD9709-0252-4E02-ACD0-9226E90508E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToe.DL", "TicTacToe.DL\TicTacToe.DL.csproj", "{76F84BBF-8BD0-42ED-955E-5DB1EE1F1C06}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicTacToe.DL", "TicTacToe.DL\TicTacToe.DL.csproj", "{76F84BBF-8BD0-42ED-955E-5DB1EE1F1C06}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration_Tests", "Integration_Tests", "{5D67C9AB-E8F0-40B3-BBAE-DC9D2BC01978}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{38671384-069C-488C-BEFB-98B6B1B54AAE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToe.UTests", "TicTacToe.UTests\TicTacToe.UTests.csproj", "{2C39A063-4A31-4E2E-BB54-33B256D53745}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToe.ITests", "TicTacToe.ITests\TicTacToe.ITests.csproj", "{1680EA00-7C15-4F38-BC59-1C3613C797CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,9 +35,21 @@ Global
 		{76F84BBF-8BD0-42ED-955E-5DB1EE1F1C06}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76F84BBF-8BD0-42ED-955E-5DB1EE1F1C06}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76F84BBF-8BD0-42ED-955E-5DB1EE1F1C06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C39A063-4A31-4E2E-BB54-33B256D53745}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C39A063-4A31-4E2E-BB54-33B256D53745}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C39A063-4A31-4E2E-BB54-33B256D53745}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C39A063-4A31-4E2E-BB54-33B256D53745}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1680EA00-7C15-4F38-BC59-1C3613C797CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1680EA00-7C15-4F38-BC59-1C3613C797CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1680EA00-7C15-4F38-BC59-1C3613C797CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1680EA00-7C15-4F38-BC59-1C3613C797CE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2C39A063-4A31-4E2E-BB54-33B256D53745} = {38671384-069C-488C-BEFB-98B6B1B54AAE}
+		{1680EA00-7C15-4F38-BC59-1C3613C797CE} = {5D67C9AB-E8F0-40B3-BBAE-DC9D2BC01978}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {22A54C85-491E-4275-A32B-D447269EBAAB}

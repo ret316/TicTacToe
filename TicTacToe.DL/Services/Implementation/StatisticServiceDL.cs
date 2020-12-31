@@ -32,5 +32,16 @@ namespace TicTacToe.DL.Services.Implementation
             await _dataBaseContextDL.GameResults.AddAsync(gameResult);
             await _dataBaseContextDL.SaveChangesAsync();
         }
+
+        public async Task GetTop10PlayersAsync()
+        {
+            var result = _dataBaseContextDL.GameResults.Select(x => x.PlayerId).Distinct().Select(x => new
+            {
+                player = x,
+                W = _dataBaseContextDL.GameResults.Count(x1 => x == x1.PlayerId && x1.Result == ResultStatus.Won),
+                L = _dataBaseContextDL.GameResults.Count(x1 => x == x1.PlayerId && x1.Result == ResultStatus.Lost),
+                D = _dataBaseContextDL.GameResults.Count(x1 => x == x1.PlayerId && x1.Result == ResultStatus.Draw)
+            }).OrderByDescending(x => x.W).Take(10);
+        }
     }
 }

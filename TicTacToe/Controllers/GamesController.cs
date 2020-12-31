@@ -10,8 +10,7 @@ using TicTacToe.WebApi.Services;
 
 namespace TicTacToe.WebApi.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
+    [Route("api/[controller]")] [ApiController]
     public class GamesController : ControllerBase
     {
         private readonly IGameService _gameService;
@@ -21,8 +20,13 @@ namespace TicTacToe.WebApi.Controllers
             this._gameService = gameService;
         }
 
-        [HttpPost("create")]
-        public async Task<IActionResult> CreateGame([FromBody] GameModel gameModel)
+        /// <summary>
+        /// Method for game creating
+        /// <para>POST api/games/create</para>
+        /// </summary>
+        /// <param name="gameModel">Game model for creation</param>
+        /// <returns></returns>
+        [HttpPost("create")] public async Task<IActionResult> CreateGame([FromBody] GameModel gameModel)
         {
             var result = await _gameService.CreateGameAsync(gameModel);
 
@@ -34,8 +38,13 @@ namespace TicTacToe.WebApi.Controllers
             return BadRequest();
         }
 
-        [HttpPost("move")]
-        public async Task<IActionResult> PlayerMove([FromBody] GameHistoryModel gameModel)
+        /// <summary>
+        /// Method for adding players move to database
+        /// <para>POST api/games/move</para>
+        /// </summary>
+        /// <param name="gameModel">Game position</param>
+        /// <returns></returns>
+        [HttpPost("move")] public async Task<IActionResult> PlayerMove([FromBody] GameHistoryModel gameModel)
         {
             var result = await _gameService.SavePlayerMoveAsync(gameModel);
 
@@ -50,8 +59,13 @@ namespace TicTacToe.WebApi.Controllers
             return BadRequest(result.GetDescription());
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllGamesForUser(Guid userId)
+        /// <summary>
+        /// Method for getting all games that user played
+        /// <para>GET api/games</para>
+        /// </summary>
+        /// <param name="userId">User id</param>
+        /// <returns></returns>
+        [HttpGet] public async Task<IActionResult> GetAllGamesForUser(Guid userId)
         {
             var games = await _gameService.GetGamesByUserAsync(userId);
 

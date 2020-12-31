@@ -9,6 +9,11 @@ namespace TicTacToe.WebApi.Extensions
 {
     public static class EnumExtension
     {
+        /// <summary>
+        /// Method for getting enum description in attributes
+        /// </summary>
+        /// <param name="value">Enum</param>
+        /// <returns>Description of enum</returns>
         public static string GetDescription(this System.Enum value)
         {
             if (value is null)

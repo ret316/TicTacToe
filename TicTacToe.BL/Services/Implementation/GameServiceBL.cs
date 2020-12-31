@@ -202,14 +202,14 @@ namespace TicTacToe.BL.Services.Implementation
 
         public async Task SetGameAsFinished(GameDL game)
         {
-            await _gameServiceDL.SetGameAsFinisheed(game);
+            await _gameServiceDL.SetGameAsFinished(game);
         }
 
         public async Task SetGameAsFinished(Guid gameId)
         {
             var game = await _gameServiceDL.GetGameByGameIdAsync(gameId);
             game.IsGameFinished = true;
-            await _gameServiceDL.SetGameAsFinisheed(game);
+            await _gameServiceDL.SetGameAsFinished(game);
         }
 
         public async Task SaveGameResult(GameResultBL gameResult)

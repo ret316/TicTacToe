@@ -19,9 +19,14 @@ namespace TicTacToe.WebApi.Controllers
             this._userService = userService;
         }
 
-        // GET api/<UsersController>
-        [HttpGet]
-        public async Task<IActionResult> GetAllUsersAsync(int pageNumber, int pageSize)
+        /// <summary>
+        /// Method for getting
+        /// <para>GET api/users</para>
+        /// </summary>
+        /// <param name="pageNumber">Selected page number</param>
+        /// <param name="pageSize">Number of objects in pagination</param>
+        /// <returns></returns>
+        [HttpGet] public async Task<IActionResult> GetAllUsersAsync(int pageNumber, int pageSize)
         {
             var users = await _userService.GetAllUsersAsync(pageNumber, pageSize);
 
@@ -33,9 +38,13 @@ namespace TicTacToe.WebApi.Controllers
             return Ok(users);
         }
 
-        // GET api/<UsersController>/id
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetUserAsync(Guid id)
+        /// <summary>
+        /// Method for getting user details
+        /// <para>GET api/users/id</para>
+        /// </summary>
+        /// <param name="id">User id</param>
+        /// <returns></returns>
+        [HttpGet("{id}")] public async Task<IActionResult> GetUserAsync(Guid id)
         {
             var user = await _userService.GetUserAsync(id);
 
@@ -47,9 +56,13 @@ namespace TicTacToe.WebApi.Controllers
             return Ok(user);
         }
 
-        // POST api/<UsersController>
-        [HttpPost]
-        public async Task<IActionResult> CreateUserAsync([FromBody] UserModel user)
+        /// <summary>
+        /// Method for user creation
+        /// <para>POST api/users</para>
+        /// </summary>
+        /// <param name="user">User model</param>
+        /// <returns></returns>
+        [HttpPost] public async Task<IActionResult> CreateUserAsync([FromBody] UserModel user)
         {
             var result = await _userService.CreateUserAsync(user);
 
@@ -60,9 +73,14 @@ namespace TicTacToe.WebApi.Controllers
             return Ok();
         }
 
-        // PUT api/<UsersController>/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUserAsync(Guid id, [FromBody] UserModel user)
+        /// <summary>
+        /// Method for user updating
+        /// <para>PUT api/users/id</para>
+        /// </summary>
+        /// <param name="id">User id</param>
+        /// <param name="user">New user model</param>
+        /// <returns></returns>
+        [HttpPut("{id}")] public async Task<IActionResult> UpdateUserAsync(Guid id, [FromBody] UserModel user)
         {
             var result = await _userService.UpdateUserAsync(new UserModel
             {
@@ -80,9 +98,13 @@ namespace TicTacToe.WebApi.Controllers
             return Ok();
         }
 
-        // DELETE api/<UsersController>/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUserAsync(Guid id)
+        /// <summary>
+        /// Method for user deletion
+        /// <para>DELETE api/users/id</para>
+        /// </summary>
+        /// <param name="id">User id</param>
+        /// <returns></returns>
+        [HttpDelete("{id}")] public async Task<IActionResult> DeleteUserAsync(Guid id)
         {
             var result = await _userService.DeleteUserAsync(id);
 
@@ -94,9 +116,13 @@ namespace TicTacToe.WebApi.Controllers
             return Ok();
         }
 
-        [AllowAnonymous]
-        [HttpPost("authenticate")]
-        public async Task<IActionResult> Authenticate([FromBody] UserAuthModel model)
+        /// <summary>
+        /// Method for user authentication
+        /// <para>POST api/users/authenticate</para>
+        /// </summary>
+        /// <param name="model">User authentication model</param>
+        /// <returns></returns>
+        [AllowAnonymous] [HttpPost("authenticate")] public async Task<IActionResult> Authenticate([FromBody] UserAuthModel model)
         {
             var user = await _userService.Authenticate(model);
             if (user is null)

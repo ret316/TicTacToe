@@ -8,6 +8,11 @@ namespace TicTacToe.WebApi.Services
 {
     public interface IAuthentication
     {
+        /// <summary>
+        /// Method for authentication that generates user tokens
+        /// </summary>
+        /// <param name="user">User authentication model</param>
+        /// <returns>Authentication model</returns>
         Task<AuthUserModel> Authenticate(UserAuthModel user);
     }
 }

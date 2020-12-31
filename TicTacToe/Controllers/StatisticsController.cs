@@ -10,9 +10,7 @@ using TicTacToe.WebApi.Services;
 
 namespace TicTacToe.WebApi.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class StatisticsController : ControllerBase
+    [Route("api/[controller]")] [ApiController] public class StatisticsController : ControllerBase
     {
         private readonly IStatisticService _statisticService;
 
@@ -20,9 +18,14 @@ namespace TicTacToe.WebApi.Controllers
         {
             this._statisticService = statisticService;
         }
-        // GET api/<StatisticsController>/5
-        [HttpGet("games/{id}")]
-        public async Task<IActionResult> GetGames(Guid id)
+
+        /// <summary>
+        /// Method for getting game statistic
+        /// <para>GET api/statistics/games/id</para>
+        /// </summary>
+        /// <param name="id">Game id</param>
+        /// <returns></returns>
+        [HttpGet("games/{id}")] public async Task<IActionResult> GetGamesAsync(Guid id)
         {
             var games = await _statisticService.GetAllUserGamesAsync(id);
 
@@ -34,8 +37,13 @@ namespace TicTacToe.WebApi.Controllers
             return Ok(games);
         }
 
-        [HttpGet("history/{id}")]
-        public async Task<IActionResult> GetGameHistory(Guid id)
+        /// <summary>
+        /// Method for getting game chronology
+        /// <para>GET api/statistics/history/id</para>
+        /// </summary>
+        /// <param name="id">Game id</param>
+        /// <returns></returns>
+        [HttpGet("history/{id}")] public async Task<IActionResult> GetGameHistory(Guid id)
         {
             var history = await _statisticService.GetGameHistoryAsync(id);
             if (history.Any())
@@ -44,6 +52,16 @@ namespace TicTacToe.WebApi.Controllers
             }
 
             return Ok(history);
+        }
+
+        /// <summary>
+        /// Method for getting top 10 gamers
+        /// <para>GET api/statistics/</para>
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet] public async Task<IActionResult> GetTop10()
+        {
+            return Ok();
         }
     }
 }

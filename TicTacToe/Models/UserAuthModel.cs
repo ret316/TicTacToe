@@ -5,9 +5,18 @@ using System.Threading.Tasks;
 
 namespace TicTacToe.WebApi.Models
 {
+    /// <summary>
+    /// User model for authentication
+    /// </summary>
     public class UserAuthModel
     {
+        /// <summary>
+        /// User email
+        /// </summary>
         public string Email { get; set; }
+        /// <summary>
+        /// User password
+        /// </summary>
         public string Password { get; set; }
     }
 }

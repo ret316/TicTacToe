@@ -17,6 +17,7 @@ namespace TicTacToe.DL.Extensions
             services.AddDbContext<DataBaseContext>(options =>
             {
                 options.UseNpgsql(connectionString);
+                options.EnableSensitiveDataLogging();
             });
             services.AddScoped<IUserServiceDL, UserServiceDL>();
             services.AddScoped<IGameServiceDL, GameServiceDL>();
