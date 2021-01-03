@@ -41,5 +41,10 @@ namespace TicTacToe.WebApi.Services.Implementation
            var playerMoveResult = await _gameServiceBL.SavePlayerMoveAsync(_mapper.Map<GameHistoryBL>(history));
            return (CheckState) (int) playerMoveResult;
         }
+
+        public async Task<bool> SetGameAsFinished(Guid id)
+        {
+            return await _gameServiceBL.SetGameAsFinished(id);
+        }
     }
 }

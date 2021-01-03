@@ -9,10 +9,13 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.OpenApi.Models;
 using TicTacToe.BL.Extensions;
 using TicTacToe.DL.Extensions;
 using TicTacToe.DL.Config;
@@ -43,6 +46,56 @@ namespace TicTacToe
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
             var key = Encoding.ASCII.GetBytes(appSettingsSection.Get<AppSettings>().Secret);
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Tic Tac Toe API",
+                    Description = "REST API of game",
+                    //Contact = new OpenApiContact
+                    //{
+                    //    Name = "Boris Lobanov",
+                    //    Email = string.Empty,
+                    //    Url = new Uri("https://twitter.com/spboyer"),
+                    //},
+                    //License = new OpenApiLicense
+                    //{
+                    //    Name = "Use under LICX",
+                    //    Url = new Uri("https://example.com/license"),
+                    //}
+                });
+                OpenApiSecurityScheme securityDefinition = new OpenApiSecurityScheme()
+                {
+                    Name = "Bearer",
+                    BearerFormat = "JWT",
+                    Scheme = "bearer",
+                    Description = "Specify the authorization token.",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.Http,
+                };
+                c.AddSecurityDefinition("jwt_auth", securityDefinition);
+
+                OpenApiSecurityScheme securityScheme = new OpenApiSecurityScheme()
+                {
+                    Reference = new OpenApiReference()
+                    {
+                        Id = "jwt_auth",
+                        Type = ReferenceType.SecurityScheme
+                    }
+                };
+                OpenApiSecurityRequirement securityRequirements = new OpenApiSecurityRequirement()
+                {
+                    {securityScheme, new string[] { }},
+                };
+                c.AddSecurityRequirement(securityRequirements);
+
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+                //g.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo {Title = "My API", Version = "v1"});
+            });
             services.AddBusinessLayerCollection(key);
             services.AddDataLayerCollection(connection);
         }
@@ -56,7 +109,13 @@ namespace TicTacToe
             }
 
             app.UseHttpsRedirection();
+            app.UseSwagger();
 
+            app.UseSwaggerUI(s =>
+            {
+                s.SwaggerEndpoint("/swagger/v1/swagger.json", "Tic Tac Toe API V1");
+                s.RoutePrefix = string.Empty;
+            });
             app.UseRouting();
 
             app.UseAuthentication();

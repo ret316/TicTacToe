@@ -5,6 +5,7 @@ using System.Text;
 using TicTacToe.BL.Enum;
 using TicTacToe.BL.Models;
 using TicTacToe.DL.Models;
+using TicTacToe.BL.Extensions;
 
 namespace TicTacToe.BL.Services.Implementation
 {
@@ -32,35 +33,23 @@ namespace TicTacToe.BL.Services.Implementation
                 {
                     if (item.PlayerId == firstPlayerId)
                     {
-                        Board[item.XAxis, item.YAxis] = 'X';
+                        Board[item.YAxis, item.XAxis] = 'X';
                     }
                     else
                     {
-                        Board[item.XAxis, item.YAxis] = 'O';
+                        Board[item.YAxis, item.XAxis] = 'O';
                     }
                 }
-
             }
         }
         public bool DCheck()
         {
-            bool oneToNine = false;
-            bool threeToSeven = false;
-            for (int i = 0, j = IFieldChecker.BOARD_SIZE - 1; i < IFieldChecker.BOARD_SIZE; i++, j--)
-            {
-                if (i > 0)
-                {
-                    oneToNine = CompareChar(Board[i, i], Board[i - 1, i - 1]);
-                    threeToSeven = CompareChar(Board[j, i], Board[i - 1, j + 1]);
-                }
-            }
-
-            return oneToNine || threeToSeven;
+            return Board.CheckDiagonals();
         }
 
         public bool DoubleCellCheck()
         {
-            return Board[_nextMove.XAxis, _nextMove.YAxis] != '\0';
+            return Board[_nextMove.YAxis, _nextMove.XAxis] != '\0';
         }
 
         public bool EndGameCheck(bool game)
@@ -75,52 +64,27 @@ namespace TicTacToe.BL.Services.Implementation
 
         public bool LinesCheck()
         {
-            bool xLine = false;
-            bool yLine = false;
 
             for (int i = 0; i < IFieldChecker.BOARD_SIZE; i++)
             {
-                for (int j = 0; j < IFieldChecker.BOARD_SIZE; j++)
+                if (Board.CheckRow(i) || Board.CheckColumn(i))
                 {
-                    if (j > 0)
-                    {
-                        yLine = CompareChar(Board[j, i], Board[j - 1, i]);
-                    }
-
-                    if (i > 0)
-                    {
-                        xLine = CompareChar(Board[i, j], Board[i - 1, j]);
-                    }
-                }
-
-                if (xLine || yLine)
-                {
-                    break;
+                    return true;
                 }
             }
 
-            return xLine || yLine;
-        }
-
-        private bool CompareChar(char current, char previous)
-        {
-            if (previous == '\0')
-            {
-                return false;
-            }
-
-            return current == previous;
+            return false;
         }
 
         public void MakeMove()
         {
             if (firstPlayerId.HasValue)
             {
-                Board[_nextMove.XAxis, _nextMove.YAxis] = firstPlayerId.Value == _nextMove.PlayerId ? 'X' : 'O';
+                Board[_nextMove.YAxis, _nextMove.XAxis] = firstPlayerId.Value == _nextMove.PlayerId ? 'X' : 'O';
             }
             else
             {
-                Board[_nextMove.XAxis, _nextMove.YAxis] = 'X';
+                Board[_nextMove.YAxis, _nextMove.XAxis] = 'X';
             }
         }
 

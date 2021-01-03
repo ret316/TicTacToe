@@ -61,7 +61,12 @@ namespace TicTacToe.WebApi.Controllers
         /// <returns></returns>
         [HttpGet] public async Task<IActionResult> GetTop10()
         {
-            return Ok();
+            var top10 = await _statisticService.GetTop10PlayersAsync();
+            if (top10.Any())
+            {
+                return NotFound("No games");
+            }
+            return Ok(top10);
         }
     }
 }

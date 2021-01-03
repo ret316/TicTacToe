@@ -28,6 +28,7 @@ namespace TicTacToe.BL.Services
         /// </summary>
         /// <param name="gameResult">Model of game results</param>
         /// <returns></returns>
-        Task SaveStatisticAsync(GameResultBL gameResult);
+        Task<bool> SaveStatisticAsync(GameResultBL gameResult);
+        Task<IEnumerable<UserGamesStatisticBL>> GetTop10PlayersAsync();
     }
 }

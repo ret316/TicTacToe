@@ -23,7 +23,7 @@ namespace TicTacToe.WebApi.Config
                 .ForMember(u => u.Name, u2 => u2.MapFrom(u3 => u3.Name))
                 .ForMember(u => u.Email, u2 => u2.MapFrom(u3 => u3.Email));
             //.ForMember(u => u.Password, u2 => u2.MapFrom(u3 => u3.Password));
-            CreateMap<AuthUserModel, AuthUserModelBL>();
+            CreateMap<AuthUserModelBL, AuthUserModel>();
 
             CreateMap<GameHistoryModel, GameHistoryBL>()
                 .ForMember(g => g.GameId, g2 => g2.MapFrom(g3 => g3.GameId))
@@ -43,6 +43,7 @@ namespace TicTacToe.WebApi.Config
 
             CreateMap<GameBL, GameModel>();
             CreateMap<GameResultBL, GameResultModel>();
+            CreateMap<UserGamesStatisticBL, UserGamesStatisticModel>();
         }
     }
 }

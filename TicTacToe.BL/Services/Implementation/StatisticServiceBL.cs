@@ -33,9 +33,22 @@ namespace TicTacToe.BL.Services.Implementation
             return results.Select(h => _mapper.Map<GameHistoryBL>(h));
         }
 
-        public async Task SaveStatisticAsync(GameResultBL gameResult)
+        public async Task<bool> SaveStatisticAsync(GameResultBL gameResult)
         {
-            await _statisticServiceDL.SaveStatisticAsync(_mapper.Map<GameResultDL>(gameResult));
+            try
+            {
+                await _statisticServiceDL.SaveStatisticAsync(_mapper.Map<GameResultDL>(gameResult));
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
+        }
+        public async Task<IEnumerable<UserGamesStatisticBL>> GetTop10PlayersAsync()
+        {
+            var results = await _statisticServiceDL.GetTop10PlayersAsync();
+            return results.Select(x => _mapper.Map<UserGamesStatisticBL>(x));
         }
     }
 }

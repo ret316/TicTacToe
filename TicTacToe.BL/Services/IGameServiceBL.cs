@@ -41,7 +41,7 @@ namespace TicTacToe.BL.Services
         /// </summary>
         /// <param name="game">Game id</param>
         /// <returns></returns>
-        Task SetGameAsFinished(Guid game);
+        Task<bool> SetGameAsFinished(Guid game);
         //Task SaveGameResult(GameResultBL gameResult);
     }
 }

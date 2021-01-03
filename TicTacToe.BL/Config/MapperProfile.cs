@@ -7,7 +7,7 @@ using TicTacToe.DL.Models;
 
 namespace TicTacToe.BL.Config
 {
-    class MapperProfile : Profile
+    public class MapperProfile : Profile
     {
         public MapperProfile()
         {
@@ -17,6 +17,14 @@ namespace TicTacToe.BL.Config
                 .ForMember(u => u.Email, u2 => u2.MapFrom(u3 => u3.Email));
 
             CreateMap<GameHistoryDL, GameHistoryBL>();
+            CreateMap<GameHistoryBL, GameHistoryDL>()
+                .ForMember(g => g.Id, g2 => g2.MapFrom(g3 => Guid.NewGuid()))
+                .ForMember(g => g.GameId, g2 => g2.MapFrom(g3 => g3.GameId))
+                .ForMember(g => g.PlayerId, g2 => g2.MapFrom(g3 => g3.PlayerId))
+                .ForMember(g => g.IsBot, g2 => g2.MapFrom(g3 => g3.IsBot))
+                .ForMember(g => g.XAxis, g2 => g2.MapFrom(g3 => g3.XAxis))
+                .ForMember(g => g.YAxis, g2 => g2.MapFrom(g3 => g3.YAxis))
+                .ForMember(g => g.MoveDate, g2 => g2.MapFrom(g3 => g3.MoveDate));
 
             CreateMap<GameResultBL, GameResultDL>()
                 .ForMember(h => h.Id, h2 => h2.MapFrom(h3 => Guid.NewGuid()))
@@ -38,6 +46,7 @@ namespace TicTacToe.BL.Config
                 .ForMember(g => g.IsGameFinished, g2 => g2.MapFrom(g3 => false));
 
             CreateMap<GameDL, GameBL>();
+            CreateMap<UserGamesStatisticDL, UserGamesStatisticBL>();
         }
     }
 }

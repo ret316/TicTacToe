@@ -19,6 +19,7 @@ namespace TicTacToe.BL.Services.Implementation
         private readonly IBotService _botService;
         private readonly IStatisticServiceBL _statisticServiceBL;
         private readonly IMapper _mapper;
+
         public GameServiceBL(IGameServiceDL gameServiceDL, IFieldChecker fieldChecker, IBotService botService, IStatisticServiceBL statisticServiceBL, IMapper mapper)
         {
             this._gameServiceDL = gameServiceDL;
@@ -205,11 +206,20 @@ namespace TicTacToe.BL.Services.Implementation
             await _gameServiceDL.SetGameAsFinished(game);
         }
 
-        public async Task SetGameAsFinished(Guid gameId)
+        public async Task<bool> SetGameAsFinished(Guid gameId)
         {
-            var game = await _gameServiceDL.GetGameByGameIdAsync(gameId);
-            game.IsGameFinished = true;
-            await _gameServiceDL.SetGameAsFinished(game);
+            try
+            {
+                var game = await _gameServiceDL.GetGameByGameIdAsync(gameId);
+                game.IsGameFinished = true;
+                await _gameServiceDL.SetGameAsFinished(game);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         public async Task SaveGameResult(GameResultBL gameResult)

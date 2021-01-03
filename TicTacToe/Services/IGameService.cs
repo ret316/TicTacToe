@@ -30,5 +30,11 @@ namespace TicTacToe.WebApi.Services
         /// <param name="history">Game history model</param>
         /// <returns>Move status</returns>
         Task<CheckState> SavePlayerMoveAsync(GameHistoryModel history);
+        /// <summary>
+        /// Method for updating game as finished
+        /// </summary>
+        /// <param name="id">Game id</param>
+        /// <returns></returns>
+        Task<bool> SetGameAsFinished(Guid id);
     }
 }

@@ -45,7 +45,16 @@ namespace TicTacToe.DL.Config
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<UserDL>().Property(p => p.Id).IsRequired();
+            modelBuilder.Entity<UserDL>().Property(p => p.Email).IsRequired();
+            modelBuilder.Entity<UserDL>().Property(p => p.Password).IsRequired();
+            modelBuilder.Entity<UserDL>().Property(p => p.PasswordSalt).IsRequired();
 
+            modelBuilder.Entity<GameDL>().Property(p => p.Id).IsRequired();
+            modelBuilder.Entity<GameDL>().Property(p => p.GameId).IsRequired();
+            modelBuilder.Entity<GameDL>().Property(p => p.Player1Id).IsRequired();
+            modelBuilder.Entity<GameDL>().Property(p => p.IsPlayer2Bot).IsRequired();
+            modelBuilder.Entity<GameDL>().Property(p => p.IsGameFinished).IsRequired();
         }
 
         public virtual DbSet<UserDL> Users { get; set; }

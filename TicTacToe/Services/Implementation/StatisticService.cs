@@ -29,5 +29,11 @@ namespace TicTacToe.WebApi.Services.Implementation
             var results = await _statisticServiceBL.GetGameHistoryAsync(id);
             return results.Select(r => _mapper.Map<GameHistoryModel>(r));
         }
+
+        public async Task<IEnumerable<UserGamesStatisticModel>> GetTop10PlayersAsync()
+        {
+            var results = await _statisticServiceBL.GetTop10PlayersAsync();
+            return results.Select(x => _mapper.Map<UserGamesStatisticModel>(x));
+        }
     }
 }

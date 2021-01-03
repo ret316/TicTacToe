@@ -33,15 +33,20 @@ namespace TicTacToe.DL.Services.Implementation
             await _dataBaseContextDL.SaveChangesAsync();
         }
 
-        public async Task GetTop10PlayersAsync()
+        public async Task<IEnumerable<UserGamesStatisticDL>> GetTop10PlayersAsync()
         {
-            var result = _dataBaseContextDL.GameResults.Select(x => x.PlayerId).Distinct().Select(x => new
-            {
-                player = x,
-                W = _dataBaseContextDL.GameResults.Count(x1 => x == x1.PlayerId && x1.Result == ResultStatus.Won),
-                L = _dataBaseContextDL.GameResults.Count(x1 => x == x1.PlayerId && x1.Result == ResultStatus.Lost),
-                D = _dataBaseContextDL.GameResults.Count(x1 => x == x1.PlayerId && x1.Result == ResultStatus.Draw)
-            }).OrderByDescending(x => x.W).Take(10);
+            return await _dataBaseContextDL.GameResults.Select(p => p.PlayerId).Distinct().Select(x =>
+                new UserGamesStatisticDL
+                {
+                    PlayerId = x,
+                    GameCount = _dataBaseContextDL.GameResults.Count(x1 => x == x1.PlayerId),
+                    WinCount = _dataBaseContextDL.GameResults.Count(x2 =>
+                        x == x2.PlayerId && x2.Result == ResultStatus.Won),
+                    LostCount = _dataBaseContextDL.GameResults.Count(x3 =>
+                        x == x3.PlayerId && x3.Result == ResultStatus.Lost),
+                    DrawCount = _dataBaseContextDL.GameResults.Count(x4 =>
+                        x == x4.PlayerId && x4.Result == ResultStatus.Draw),
+                }).OrderByDescending(x5 => x5.WinCount).Take(10).ToListAsync();
         }
     }
 }
