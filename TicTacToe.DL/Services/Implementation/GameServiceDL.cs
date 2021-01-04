@@ -50,5 +50,10 @@ namespace TicTacToe.DL.Services.Implementation
             await _dataBaseContext.SaveChangesAsync();
 
         }
+
+        public async Task<IEnumerable<GameDL>> GetAllGamesAsync()
+        {
+            return await _dataBaseContext.Games.ToListAsync();
+        }
     }
 }

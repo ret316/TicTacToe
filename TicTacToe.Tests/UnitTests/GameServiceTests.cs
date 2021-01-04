@@ -83,6 +83,15 @@ namespace TicTacToe.Tests.UnitTests
                     IsPlayer2Bot = false,
                     IsGameFinished = false
                 };
+                gd1 = new GameDL
+                {
+                    Id = Id,
+                    GameId = GameId,
+                    Player1Id = PlayerId1,
+                    Player2Id = PlayerId2,
+                    IsPlayer2Bot = false,
+                    IsGameFinished = false
+                };
                 ghb0 = new GameHistoryBL
                 {
                     GameId = GameId,
@@ -164,7 +173,7 @@ namespace TicTacToe.Tests.UnitTests
 
             service = GetGameService(mock);
             result = await service.CreateGameAsync(data.gb1);
-            Assert.False(result);
+            Assert.True(result);
         }
 
         [Fact]
@@ -185,6 +194,13 @@ namespace TicTacToe.Tests.UnitTests
             var result1 = await service.GetGamesByUserAsync(PlayerId1);
 
             Assert.Equal(data.gbh0.Select(x => x.GameId), result1.Select(x => x.GameId));
+
+            mock.Setup(cfg => cfg.GetAllGamesAsync()).Returns(Task.FromResult(data.gdh0));
+            service = GetGameService(mock);
+
+            var result2 = await service.GetAllGamesAsync();
+
+            Assert.Equal(data.gbh0.Select(x => x.GameId), result2.Select(x => x.GameId));
         }
 
         [Fact]

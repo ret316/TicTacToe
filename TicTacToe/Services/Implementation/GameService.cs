@@ -30,6 +30,12 @@ namespace TicTacToe.WebApi.Services.Implementation
             });
         }
 
+        public async Task<IEnumerable<GameModel>> GetAllGamesAsync()
+        {
+            var result = await _gameServiceBL.GetAllGamesAsync();
+            return result.Select(r => _mapper.Map<GameModel>(r));
+        }
+
         public async Task<IEnumerable<GameModel>> GetGamesByUserAsync(Guid id)
         {
             var games = await _gameServiceBL.GetGamesByUserAsync(id);

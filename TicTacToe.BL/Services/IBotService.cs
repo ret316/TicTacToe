@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using TicTacToe.BL.Enum;
 using TicTacToe.BL.Models;
 
 namespace TicTacToe.BL.Services
@@ -19,7 +20,7 @@ namespace TicTacToe.BL.Services
         /// <summary>
         /// Calculate next move
         /// </summary>
-        void MakeNextMove();
+        CheckStateBL MakeNextMove();
         /// <summary>
         /// Save bots move in base
         /// </summary>

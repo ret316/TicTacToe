@@ -13,6 +13,11 @@ namespace TicTacToe.WebApi.Services
     public interface IGameService
     {
         /// <summary>
+        /// Method for getting all games
+        /// </summary>
+        /// <returns>Collection of games</returns>
+        Task<IEnumerable<GameModel>> GetAllGamesAsync();
+        /// <summary>
         /// Method for getting games that user had played
         /// </summary>
         /// <param name="id">User id</param>

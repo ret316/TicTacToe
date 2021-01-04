@@ -20,6 +20,7 @@ namespace TicTacToe.WebApi.Models
         public Guid Player1Id { get; set; }
         /// <summary>
         /// Player id. can be null if game with bot
+        /// if service bot account must be not null
         /// </summary>
         public Guid? Player2Id { get; set; }
         /// <summary>

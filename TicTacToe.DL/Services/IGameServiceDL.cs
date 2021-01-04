@@ -12,6 +12,11 @@ namespace TicTacToe.DL.Services
     public interface IGameServiceDL
     {
         /// <summary>
+        /// Method for getting all games
+        /// </summary>
+        /// <returns>Collection of games</returns>
+        Task<IEnumerable<GameDL>> GetAllGamesAsync();
+        /// <summary>
         /// Method for getting user games 
         /// </summary>
         /// <param name="id">user id</param>

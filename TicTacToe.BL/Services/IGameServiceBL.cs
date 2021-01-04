@@ -13,6 +13,11 @@ namespace TicTacToe.BL.Services
     public interface IGameServiceBL
     {
         /// <summary>
+        /// Method for getting all games
+        /// </summary>
+        /// <returns>Collection of games</returns>
+        Task<IEnumerable<GameBL>> GetAllGamesAsync();
+        /// <summary>
         /// Method for getting user games 
         /// </summary>
         /// <param name="id">user id</param>

@@ -24,7 +24,7 @@ namespace TicTacToe.DL.Services.Implementation
 
         public async Task<IEnumerable<GameHistoryDL>> GetGameHistoryAsync(Guid id)
         {
-            return await _dataBaseContextDL.GameHistories.Where(g => g.GameId == id).ToArrayAsync();
+            return await _dataBaseContextDL.GameHistories.Where(g => g.GameId == id).ToListAsync();
         }
 
         public async Task SaveStatisticAsync(GameResultDL gameResult)

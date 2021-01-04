@@ -41,6 +41,11 @@ namespace TicTacToe.BL.Enum
         /// <summary>
         /// Player not from that game
         /// </summary>
-        GamePlayerCheck = 64
+        GamePlayerCheck = 64,
+        /// <summary>
+        /// Player lost
+        /// </summary>
+        BotWonCheck = 128
+        
     }
 }

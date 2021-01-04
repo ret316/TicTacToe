@@ -29,7 +29,7 @@ namespace TicTacToe.WebApi.Controllers
         {
             var games = await _statisticService.GetAllUserGamesAsync(id);
 
-            if (games.Any())
+            if (!games.Any())
             {
                 return NotFound("No Games");
             }
@@ -46,7 +46,7 @@ namespace TicTacToe.WebApi.Controllers
         [HttpGet("history/{id}")] public async Task<IActionResult> GetGameHistory(Guid id)
         {
             var history = await _statisticService.GetGameHistoryAsync(id);
-            if (history.Any())
+            if (!history.Any())
             {
                 return NotFound("No game history");
             }
@@ -62,7 +62,7 @@ namespace TicTacToe.WebApi.Controllers
         [HttpGet] public async Task<IActionResult> GetTop10()
         {
             var top10 = await _statisticService.GetTop10PlayersAsync();
-            if (top10.Any())
+            if (!top10.Any())
             {
                 return NotFound("No games");
             }

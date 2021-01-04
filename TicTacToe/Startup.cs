@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using TicTacToe.BL.Extensions;
 using TicTacToe.DL.Extensions;
 using TicTacToe.DL.Config;
@@ -52,18 +53,7 @@ namespace TicTacToe
                 {
                     Version = "v1",
                     Title = "Tic Tac Toe API",
-                    Description = "REST API of game",
-                    //Contact = new OpenApiContact
-                    //{
-                    //    Name = "Boris Lobanov",
-                    //    Email = string.Empty,
-                    //    Url = new Uri("https://twitter.com/spboyer"),
-                    //},
-                    //License = new OpenApiLicense
-                    //{
-                    //    Name = "Use under LICX",
-                    //    Url = new Uri("https://example.com/license"),
-                    //}
+                    Description = "REST API of game"
                 });
                 OpenApiSecurityScheme securityDefinition = new OpenApiSecurityScheme()
                 {
@@ -108,6 +98,7 @@ namespace TicTacToe
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseSerilogRequestLogging();
             app.UseHttpsRedirection();
             app.UseSwagger();
 
@@ -117,7 +108,6 @@ namespace TicTacToe
                 s.RoutePrefix = string.Empty;
             });
             app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
 

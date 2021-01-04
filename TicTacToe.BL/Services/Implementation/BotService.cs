@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TicTacToe.BL.Enum;
 using TicTacToe.BL.Models;
 using TicTacToe.DL.Services;
 
@@ -26,7 +27,7 @@ namespace TicTacToe.BL.Services.Implementation
             set => gameHistory = value;
         }
 
-        public void MakeNextMove()
+        public CheckStateBL MakeNextMove()
         {
             Random rnd = new Random();
             int xAxis; int yAxis;
@@ -34,15 +35,26 @@ namespace TicTacToe.BL.Services.Implementation
             {
                 xAxis = rnd.Next(0, IFieldChecker.BOARD_SIZE);
                 yAxis = rnd.Next(0, IFieldChecker.BOARD_SIZE);
-                if (CheckIndex(xAxis, yAxis))
+                if (Board[yAxis, xAxis] == '\0')
                     break;
             }
-            SaveBotMove(xAxis, yAxis);
-        }
 
-        private bool CheckIndex(int x, int y)
-        {
-            return Board[x, y] == '\0';
+            //Board[yAxis, xAxis] = '\0';
+            _fieldChecker.Board = Board;
+
+            SaveBotMove(xAxis, yAxis);
+
+            if (_fieldChecker.LinesCheck())
+            {
+                return CheckStateBL.BotWonCheck;
+            }
+
+            if (_fieldChecker.DCheck())
+            {
+                return CheckStateBL.BotWonCheck;
+            }
+
+            return CheckStateBL.None;
         }
 
         public void SaveBotMove(int x, int y)

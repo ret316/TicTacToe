@@ -65,10 +65,25 @@ namespace TicTacToe.WebApi.Controllers
         /// </summary>
         /// <param name="userId">User id</param>
         /// <returns></returns>
-        [HttpGet] public async Task<IActionResult> GetAllGamesForUser(Guid userId)
+        [HttpGet("{userId}")] public async Task<IActionResult> GetAllGamesForUser(Guid userId)
         {
             var games = await _gameService.GetGamesByUserAsync(userId);
 
+            if (games.Any())
+            {
+                return Ok(games);
+            }
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Method for getting all games
+        /// </summary>
+        /// <returns>Collection of games</returns>
+        [HttpGet] public async Task<IActionResult> GetAllGamesAsync()
+        {
+            var games = await _gameService.GetAllGamesAsync();
             if (games.Any())
             {
                 return Ok(games);
