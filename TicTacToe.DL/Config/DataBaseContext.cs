@@ -14,7 +14,7 @@ namespace TicTacToe.DL.Config
         public DataBaseContext(DbContextOptions<DataBaseContext> options) : base(options)
         {
         //    Database.EnsureDeleted();
-        //    Database.EnsureCreated();
+            Database.EnsureCreated();
         //    var tuple = GetPassHash("123456");
         //    Users.Add(new UserDL
         //    {

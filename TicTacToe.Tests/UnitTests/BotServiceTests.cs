@@ -48,7 +48,7 @@ namespace TicTacToe.Tests.UnitTests
             };
 
             var mock = new Mock<IGameServiceDL>();
-            mock.Setup(cfg => cfg.SavePlayerMoveAsync(user)).Returns(Task.FromResult(default(object)));
+            mock.Setup(cfg => cfg.SavePlayerMoveAsync(user)).Returns(Task.FromResult(BL.Enum.CheckStateBL.None));
 
             var botService = GetService(mock);
             var b0 = new char[3, 3]
@@ -57,7 +57,7 @@ namespace TicTacToe.Tests.UnitTests
             };
             botService.Board = b0;
             botService.GameHistoryBl = user2;
-            botService.MakeNextMove();
+            botService.MakeNextMove(false);
             Assert.True(b0 == botService.Board);
         }
     }

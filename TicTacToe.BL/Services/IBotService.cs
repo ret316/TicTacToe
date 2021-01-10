@@ -7,6 +7,7 @@ using TicTacToe.BL.Models;
 
 namespace TicTacToe.BL.Services
 {
+    //TODO create external bot
     /// <summary>
     /// Interface of bot service
     /// </summary>
@@ -20,7 +21,7 @@ namespace TicTacToe.BL.Services
         /// <summary>
         /// Calculate next move
         /// </summary>
-        CheckStateBL MakeNextMove();
+        CheckStateBL MakeNextMove(bool isExternalBot);
         /// <summary>
         /// Save bots move in base
         /// </summary>

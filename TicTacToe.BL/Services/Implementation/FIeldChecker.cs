@@ -54,7 +54,7 @@ namespace TicTacToe.BL.Services.Implementation
 
         public bool EndGameCheck(bool game)
         {
-            return game || _gameHistory.Count() > Math.Pow(IFieldChecker.BOARD_SIZE, 2);
+            return game || _gameHistory.Count() >= Math.Pow(IFieldChecker.BOARD_SIZE, 2);
         }
 
         public bool IndexCheck()
@@ -97,13 +97,13 @@ namespace TicTacToe.BL.Services.Implementation
                 {
                     return true;
                 }
-                
+
                 if (last.IsBot == _nextMove.IsBot)
                 {
                     if (last.IsBot)
                     {
                         return true;
-                    }  
+                    }
                 }
             }
 
@@ -114,7 +114,7 @@ namespace TicTacToe.BL.Services.Implementation
         {
             if (_nextMove.IsBot)
             {
-                return game.IsPlayer2Bot;
+                return !game.IsPlayer2Bot;
             }
 
             return _nextMove.PlayerId != game.Player1Id && _nextMove.PlayerId != game.Player2Id.Value;

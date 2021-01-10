@@ -7,7 +7,6 @@ using AutoMapper;
 using TicTacToe.BL.Models;
 using TicTacToe.DL.Models;
 using TicTacToe.DL.Services;
-using ResultStatus = TicTacToe.BL.Models.ResultStatus;
 
 namespace TicTacToe.BL.Services.Implementation
 {

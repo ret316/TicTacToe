@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using TicTacToe.BL.Enum;
 using TicTacToe.BL.Extensions;
+using TicTacToe.BL.Helpers;
 using TicTacToe.BL.Models;
 using TicTacToe.DL.Models;
 using TicTacToe.DL.Services;
@@ -60,37 +61,18 @@ namespace TicTacToe.BL.Services.Implementation
 
         private GameDL game;
 
-        private Guid GetWinner()
-        {
-            var list = _fieldChecker.Board.Cast<char>();
-            var x = list.Count(x => x == 'X');
-            var y = list.Count(x => x == 'O');
-            return x > y ? game.Player1Id : game.Player2Id.Value;
-        }
-
         private async Task WinnerLoser()
         {
-            await SetGameAsFinished(game);
-            var winner = GetWinner();
-            await SaveGameResult(new GameResultBL
+            await SetGameAsFinished();
+            var win = new WinHelper(_statisticServiceBL)
             {
-                Id = Guid.NewGuid(),
-                GameId = game.GameId,
-                PlayerId = winner,
-                Result = Models.ResultStatus.Won
-            });
-            if (game.Player2Id.HasValue)
-            {
-                await SaveGameResult(new GameResultBL
-                {
-                    Id = Guid.NewGuid(),
-                    GameId = game.GameId,
-                    PlayerId = winner == game.Player1Id ? game.Player2Id.Value : game.Player1Id,
-                    Result = Models.ResultStatus.Lost
-                });
-            }
+                Board = _fieldChecker.Board,
+                Game = _mapper.Map<GameBL>(game)
+            };
+            await win.FindWinnerAndLoser();
         }
 
+        //TODO use cache or redis
         public async Task<CheckStateBL> SavePlayerMoveAsync(GameHistoryBL historyBL)
         {
             var historyDL = await _gameServiceDL.GetGameHistoriesAsync(historyBL.GameId);
@@ -127,31 +109,30 @@ namespace TicTacToe.BL.Services.Implementation
                 return CheckStateBL.DoubleCellCheck;
             }
 
+            #region monad
+
+            //var check = _fieldChecker.GamePlayerCheck(new GameBL
+            //                        {
+            //                            Player1Id = game.Player1Id,
+            //                            Player2Id = game.Player2Id,
+            //                            IsPlayer2Bot = game.IsPlayer2Bot
+            //                        })
+            //    .Bind(gp => _fieldChecker.LastPlayerCheck()
+            //        .Bind(lp => _fieldChecker.EndGameCheck(game.IsGameFinished)
+            //            .Bind(eg => _fieldChecker.IndexCheck()
+            //                .Bind(ic => _fieldChecker.DoubleCellCheck()
+            //                    .Bind(dc => _fieldChecker.LinesCheck(() => _gameServiceDL.SavePlayerMoveAsync(modelForSave))
+            //                        .Bind(lc => _fieldChecker.DCheck(() => _gameServiceDL.SavePlayerMoveAsync(modelForSave))))))));
+
+            //if (check.HasValue)
+            //{
+            //    return check.Value;
+            //}
+
+            #endregion
+
             if (!historyBL.IsBot)
             {
-
-                #region monad
-
-                //var check = _fieldChecker.GamePlayerCheck(new GameBL
-                //                        {
-                //                            Player1Id = game.Player1Id,
-                //                            Player2Id = game.Player2Id,
-                //                            IsPlayer2Bot = game.IsPlayer2Bot
-                //                        })
-                //    .Bind(gp => _fieldChecker.LastPlayerCheck()
-                //        .Bind(lp => _fieldChecker.EndGameCheck(game.IsGameFinished)
-                //            .Bind(eg => _fieldChecker.IndexCheck()
-                //                .Bind(ic => _fieldChecker.DoubleCellCheck()
-                //                    .Bind(dc => _fieldChecker.LinesCheck(() => _gameServiceDL.SavePlayerMoveAsync(modelForSave))
-                //                        .Bind(lc => _fieldChecker.DCheck(() => _gameServiceDL.SavePlayerMoveAsync(modelForSave))))))));
-
-                //if (check.HasValue)
-                //{
-                //    return check.Value;
-                //}
-
-                #endregion
-
                 _fieldChecker.MakeMove();
                 await _gameServiceDL.SavePlayerMoveAsync(modelForSave);
 
@@ -167,34 +148,35 @@ namespace TicTacToe.BL.Services.Implementation
                     return CheckStateBL.DiagonalCheck;
                 }
 
-                if (history.Count() + 1 > (Math.Pow(IFieldChecker.BOARD_SIZE, 2) - 1))
+                if (history.Count() + 1 > Math.Pow(IFieldChecker.BOARD_SIZE, 2))
                 {
-                    await SetGameAsFinished(game);
-                    await _statisticServiceBL.SaveStatisticAsync(GameWithBot(game.Player1Id));
+                    await SetGameAsFinished();
+                    await _statisticServiceBL.SaveStatisticAsync(GameResultWithBot(game.Player1Id));
                     if (!game.IsPlayer2Bot)
                     {
-                        await _statisticServiceBL.SaveStatisticAsync(GameWithBot(game.Player2Id.Value));
+                        await _statisticServiceBL.SaveStatisticAsync(GameResultWithBot(game.Player2Id.Value));
                     }
                     return CheckStateBL.EndGameCheck;
                 }
-
-                return await BotMove(history, historyBL);
+                //TODO remove in future
+                return await BotMove(history, historyBL, false);
             }
             else
             {
-                return await BotMove(history, historyBL);
+                return await BotMove(history, historyBL, true);
             }
         }
 
-        private async Task<CheckStateBL> BotMove(IEnumerable<GameHistoryBL> history, GameHistoryBL historyBL)
+        private async Task<CheckStateBL> BotMove(IEnumerable<GameHistoryBL> history, GameHistoryBL historyBL, bool isExternalBot)
         {
             _botService.Board = (char[,])_fieldChecker.Board.Clone();
             _botService.GameHistoryBl = historyBL;
-            var result = _botService.MakeNextMove();
+            var result = _botService.MakeNextMove(isExternalBot);
 
             if (result != CheckStateBL.None)
             {
-                await SaveGameResult(new GameResultBL
+                await SetGameAsFinished();
+                await _statisticServiceBL.SaveStatisticAsync(new GameResultBL
                 {
                     Id = Guid.NewGuid(),
                     GameId = game.GameId,
@@ -204,17 +186,17 @@ namespace TicTacToe.BL.Services.Implementation
                 return result;
             }
 
-            if (history.Count() + 2 > (Math.Pow(IFieldChecker.BOARD_SIZE, 2) - 1))
+            if (history.Count() + 2 > Math.Pow(IFieldChecker.BOARD_SIZE, 2))
             {
-                await SetGameAsFinished(game);
-                await _statisticServiceBL.SaveStatisticAsync(GameWithBot(game.Player1Id));
+                await SetGameAsFinished();
+                await _statisticServiceBL.SaveStatisticAsync(GameResultWithBot(game.Player1Id));
 
                 return CheckStateBL.EndGameCheck;
             }
             return CheckStateBL.None;
         }
 
-        private GameResultBL GameWithBot(Guid playerId)
+        private GameResultBL GameResultWithBot(Guid playerId)
         {
             return new GameResultBL
             {
@@ -225,7 +207,7 @@ namespace TicTacToe.BL.Services.Implementation
             };
         }
 
-        public async Task SetGameAsFinished(GameDL game)
+        private async Task SetGameAsFinished()
         {
             game.IsGameFinished = true;
             await _gameServiceDL.SetGameAsFinished(game);
@@ -245,11 +227,6 @@ namespace TicTacToe.BL.Services.Implementation
             {
                 return false;
             }
-        }
-
-        public async Task SaveGameResult(GameResultBL gameResult)
-        {
-            await _statisticServiceBL.SaveStatisticAsync(gameResult);
         }
 
         public async Task<IEnumerable<GameBL>> GetAllGamesAsync()

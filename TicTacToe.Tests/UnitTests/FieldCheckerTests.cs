@@ -403,7 +403,7 @@ namespace TicTacToe.Tests.UnitTests
             _fieldChecker.NextMove = data.bh2;
             Assert.True(_fieldChecker.GamePlayerCheck(data.bg0));
             _fieldChecker.NextMove = data.bh3;
-            Assert.True(_fieldChecker.GamePlayerCheck(data.bg1));
+            Assert.False(_fieldChecker.GamePlayerCheck(data.bg1));
         }
     }
 }

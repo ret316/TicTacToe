@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using Serilog;
 using TicTacToe.DL.Config;
 using TicTacToe.DL.Models;
 using Xunit;
@@ -41,7 +43,15 @@ namespace TicTacToe.Tests.IntegrationTests
             server ??= new TestServer(new WebHostBuilder()
                 .UseEnvironment("Debug")
                 .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseConfiguration(builder).UseStartup<Startup>());
+                .UseConfiguration(builder).UseStartup<Startup>()
+                .UseSerilog((hostingContext, loggerConfiguration) => {
+                    loggerConfiguration
+                        .ReadFrom.Configuration(hostingContext.Configuration)
+                        .Enrich.FromLogContext()
+                        .Enrich.WithProperty("ApplicationName", typeof(Program).Assembly.GetName().Name)
+                        .Enrich.WithProperty("Environment", hostingContext.HostingEnvironment);
+                    loggerConfiguration.Enrich.WithProperty("DebuggerAttached", Debugger.IsAttached);
+                }));
 
             return server.CreateClient();
         }
@@ -127,6 +137,7 @@ namespace TicTacToe.Tests.IntegrationTests
             {
                 var d = await db.Games.ToListAsync();
                 db.Games.RemoveRange(d);
+                await db.SaveChangesAsync();
             }
         }
     }

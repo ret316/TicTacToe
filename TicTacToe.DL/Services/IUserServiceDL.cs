@@ -6,6 +6,7 @@ using TicTacToe.DL.Models;
 
 namespace TicTacToe.DL.Services
 {
+    //TODO use as friendly assemble
     /// <summary>
     /// Interface of user service
     /// </summary>

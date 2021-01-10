@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TicTacToe.BL.Enum;
 using TicTacToe.BL.Models;
+using TicTacToe.DL.Models;
 using TicTacToe.DL.Services;
 
 namespace TicTacToe.BL.Services.Implementation
@@ -12,7 +13,8 @@ namespace TicTacToe.BL.Services.Implementation
     public class BotService : IBotService
     {
         private readonly IFieldChecker _fieldChecker;
-        private readonly IGameServiceDL _gameServiceDL;
+        private IGameServiceDL _gameServiceDL;
+        private readonly IStatisticServiceBL _statisticServiceBL;
         public char[,] Board { get; set; }
         private GameHistoryBL gameHistory;
 
@@ -21,27 +23,37 @@ namespace TicTacToe.BL.Services.Implementation
             this._fieldChecker = fieldChecker;
             this._gameServiceDL = gameServiceDL;
         }
-        
+
         public GameHistoryBL GameHistoryBl
         {
             set => gameHistory = value;
         }
 
-        public CheckStateBL MakeNextMove()
+        public CheckStateBL MakeNextMove(bool isExternalBot)
         {
             Random rnd = new Random();
             int xAxis; int yAxis;
-            while (true)
+
+            if (!isExternalBot)
             {
-                xAxis = rnd.Next(0, IFieldChecker.BOARD_SIZE);
-                yAxis = rnd.Next(0, IFieldChecker.BOARD_SIZE);
-                if (Board[yAxis, xAxis] == '\0')
-                    break;
+                while (true)
+                {
+                    xAxis = rnd.Next(0, IFieldChecker.BOARD_SIZE);
+                    yAxis = rnd.Next(0, IFieldChecker.BOARD_SIZE);
+                    if (Board[yAxis, xAxis] == '\0')
+                    {
+                        Board[yAxis, xAxis] = 'O';
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                xAxis = gameHistory.XAxis; yAxis = gameHistory.YAxis;
+                Board[gameHistory.YAxis, gameHistory.XAxis] = 'O';
             }
 
-            //Board[yAxis, xAxis] = '\0';
             _fieldChecker.Board = Board;
-
             SaveBotMove(xAxis, yAxis);
 
             if (_fieldChecker.LinesCheck())
@@ -59,9 +71,8 @@ namespace TicTacToe.BL.Services.Implementation
 
         public void SaveBotMove(int x, int y)
         {
-            _gameServiceDL.SavePlayerMoveAsync(new DL.Models.GameHistoryDL
+            _gameServiceDL.SavePlayerMoveAsync(new GameHistoryDL
             {
-                Id = Guid.NewGuid(),
                 GameId = gameHistory.GameId,
                 PlayerId = null,
                 IsBot = true,

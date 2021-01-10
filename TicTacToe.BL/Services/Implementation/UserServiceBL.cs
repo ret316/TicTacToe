@@ -175,9 +175,12 @@ namespace TicTacToe.BL.Services.Implementation
             using (var sha = new HMACSHA512(user.PasswordSalt))
             {
                 var hash = sha.ComputeHash(Encoding.UTF8.GetBytes(password));
-                if (hash.Where((t, i) => t != user.Password[i]).Any())
+                for (int i = 0; i < hash.Length; i++)
                 {
-                    return false;
+                    if (hash[i] != user.Password[i])
+                    {
+                        return false;
+                    }
                 }
             }
 

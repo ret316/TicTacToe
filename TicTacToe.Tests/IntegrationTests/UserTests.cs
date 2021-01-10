@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using System.Security.Cryptography;
@@ -15,6 +16,8 @@ using TicTacToe.DL.Config;
 using TicTacToe.WebApi.Models;
 using Xunit;
 using System.Linq;
+using Serilog;
+using TicTacToe.DL.Models;
 
 namespace TicTacToe.Tests.IntegrationTests
 {
@@ -23,6 +26,8 @@ namespace TicTacToe.Tests.IntegrationTests
 
         public TestServer server;
         public string conString;
+
+        private static Guid Id = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc09");
 
         private HttpClient GetConfiguration()
         {
@@ -37,7 +42,16 @@ namespace TicTacToe.Tests.IntegrationTests
             server ??= new TestServer(new WebHostBuilder()
                 .UseEnvironment("Debug")
                 .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseConfiguration(builder).UseStartup<Startup>());
+                .UseConfiguration(builder).UseStartup<Startup>()
+                .UseSerilog((hostingContext, loggerConfiguration) => {
+                    loggerConfiguration
+                        .ReadFrom.Configuration(hostingContext.Configuration)
+                        .Enrich.FromLogContext()
+                        .Enrich.WithProperty("ApplicationName", typeof(Program).Assembly.GetName().Name)
+                        .Enrich.WithProperty("Environment", hostingContext.HostingEnvironment);
+                    loggerConfiguration.Enrich.WithProperty("DebuggerAttached", Debugger.IsAttached);
+                })
+            );
 
             return server.CreateClient();
         }
@@ -88,6 +102,8 @@ namespace TicTacToe.Tests.IntegrationTests
             {
                 var us = await db.Users.FirstOrDefaultAsync(x => x.Name == user.Name && x.Email == user.Email);
                 Assert.True(user.Name == us.Name && user.Email == us.Email);
+                db.Users.Remove(us);
+                await db.SaveChangesAsync();
             }
         }
 
@@ -104,34 +120,56 @@ namespace TicTacToe.Tests.IntegrationTests
             };
             await using (var db = ContextBuiler())
             {
-                var us = await db.Users.FirstOrDefaultAsync(x => x.Email == user.Email);
+                var (hash, salt) = GetPassHash("123456");
+                var user0 = new UserDL
+                {
+                    Id = Id,
+                    Name = "Alex",
+                    Email = "a@ss.com",
+                    Password = hash,
+                    PasswordSalt = salt
+                };
+
+                await db.Users.AddAsync(user0);
+                await db.SaveChangesAsync();
 
                 var json = JsonConvert.SerializeObject(user);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
-                var resp = await client.PutAsync($"api/users/{us.Id}", content);
+                var resp = await client.PutAsync($"api/users/{Id}", content);
             }
             await using (var db = ContextBuiler())
             {
                 var us1 = await db.Users.FirstOrDefaultAsync(x => x.Email == user.Email);
                 Assert.True(user.Name == us1.Name && user.Email == us1.Email);
+                db.Users.Remove(us1);
+                await db.SaveChangesAsync();
             }
         }
 
         [Fact]
-        public async Task DeteleUser()
+        public async Task DeleteUser()
         {
             var client = GetConfiguration();
-            Guid id;
             await using (var db = ContextBuiler())
             {
-                var user = await db.Users.FirstOrDefaultAsync(x => x.Email == "a@ss.com");
-                id = user.Id;
+                var (hash, salt) = GetPassHash("123456");
+                var user0 = new UserDL
+                {
+                    Id = Id,
+                    Name = "Alex",
+                    Email = "a@ss.com",
+                    Password = hash,
+                    PasswordSalt = salt
+                };
+
+                await db.Users.AddAsync(user0);
+                await db.SaveChangesAsync();
             }
 
-            var res = await client.DeleteAsync($"api/users/{id}");
+            var res = await client.DeleteAsync($"api/users/{Id}");
             await using (var db = ContextBuiler())
             {
-                var user = await db.Users.FirstOrDefaultAsync(x => x.Id == id);
+                var user = await db.Users.FirstOrDefaultAsync(x => x.Id == Id);
                 Assert.Null(user);
             }
         }
