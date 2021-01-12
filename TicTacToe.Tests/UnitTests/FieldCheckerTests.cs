@@ -4,406 +4,103 @@ using System.Text;
 using TicTacToe.BL.Models;
 using TicTacToe.BL.Services;
 using TicTacToe.BL.Services.Implementation;
+using TicTacToe.Tests.TestData.FieldCheck;
 using Xunit;
 
 namespace TicTacToe.Tests.UnitTests
 {
     public class FieldCheckerTests
     {
-
-        private static Guid Id = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc09");
-        private static Guid GameId = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc10");
-        private static Guid PlayerId1 = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc11");
-        private static Guid PlayerId2 = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc12");
-
-        public class Colls
+        [Theory]
+        [ClassData(typeof(FieldTestData1))]
+        public void Test1_BoardInit(char[,] board, IEnumerable<GameHistoryBL> list)
         {
-            public GameBL bg0;
-            public GameBL bg1;
-            public GameHistoryBL bh0;
-            public GameHistoryBL bh1;
-            public GameHistoryBL bh2;
-            public GameHistoryBL bh3;
-            public IEnumerable<GameHistoryBL> bgh0;
-            public IEnumerable<GameHistoryBL> bgh1;
-            public IEnumerable<GameHistoryBL> bgh2;
-            public IEnumerable<GameHistoryBL> bgh3;
-            public IEnumerable<GameHistoryBL> bgh4;
-            public char[,] b0;
-            public char[,] b1;
-            public char[,] b2;
-            public char[,] b3;
+            IFieldChecker fieldChecker = new FIeldChecker();
+            fieldChecker.BoardInit(list);
 
-            public Colls()
-            {
-                bh0 = new GameHistoryBL
-                {
-                    PlayerId = PlayerId1,
-                    GameId = GameId,
-                    IsBot = false,
-                    XAxis = 1,
-                    YAxis = 1,
-                    MoveDate = DateTime.Parse("2020-10-10")
-                };
-                bh1 = new GameHistoryBL
-                {
-                    PlayerId = PlayerId1,
-                    GameId = GameId,
-                    IsBot = false,
-                    XAxis = 5,
-                    YAxis = 5,
-                    MoveDate = DateTime.Parse("2020-10-10")
-                };
-                bh2 = new GameHistoryBL
-                {
-                    PlayerId = Guid.NewGuid(),
-                    GameId = GameId,
-                    IsBot = false,
-                    XAxis = 5,
-                    YAxis = 5,
-                    MoveDate = DateTime.Parse("2020-10-10")
-                };
-                bh3 = new GameHistoryBL
-                {
-                    PlayerId = null,
-                    GameId = GameId,
-                    IsBot = true,
-                    XAxis = 2,
-                    YAxis = 2,
-                    MoveDate = DateTime.Parse("2020-10-10")
-                };
-                bgh0 = new List<GameHistoryBL> { bh0 };
-                bgh1 = new List<GameHistoryBL>
-                {
-                    bh0,
-                    new GameHistoryBL
-                    {
-                        PlayerId = PlayerId2,
-                        GameId = GameId,
-                        IsBot = false,
-                        XAxis = 2,
-                        YAxis = 2,
-                        MoveDate = DateTime.Parse("2020-10-10")
-                    },
-                    new GameHistoryBL
-                    {
-                        PlayerId = PlayerId1,
-                        GameId = GameId,
-                        IsBot = false,
-                        XAxis = 1,
-                        YAxis = 0,
-                        MoveDate = DateTime.Parse("2020-10-10")
-                    },
-                    new GameHistoryBL
-                    {
-                        PlayerId = PlayerId2,
-                        GameId = GameId,
-                        IsBot = false,
-                        XAxis = 2,
-                        YAxis = 1,
-                        MoveDate = DateTime.Parse("2020-10-10")
-                    },
-                    new GameHistoryBL
-                    {
-                        PlayerId = PlayerId1,
-                        GameId = GameId,
-                        IsBot = false,
-                        XAxis = 1,
-                        YAxis = 2,
-                        MoveDate = DateTime.Parse("2020-10-10")
-                    },
-
-                };
-                bgh2 = new List<GameHistoryBL>
-                {
-                    new GameHistoryBL
-                    {
-                        PlayerId = PlayerId1,
-                        GameId = GameId,
-                        IsBot = false,
-                        XAxis = 1,
-                        YAxis = 1,
-                        MoveDate = DateTime.Parse("2020-10-10")
-                    },
-                    new GameHistoryBL
-                    {
-                        PlayerId = PlayerId2,
-                        GameId = GameId,
-                        IsBot = false,
-                        XAxis = 2,
-                        YAxis = 1,
-                        MoveDate = DateTime.Parse("2020-10-10")
-                    },
-                    new GameHistoryBL
-                    {
-                        PlayerId = PlayerId1,
-                        GameId = GameId,
-                        IsBot = false,
-                        XAxis = 2,
-                        YAxis = 0,
-                        MoveDate = DateTime.Parse("2020-10-10")
-                    },
-                    new GameHistoryBL
-                    {
-                        PlayerId = PlayerId2,
-                        GameId = GameId,
-                        IsBot = false,
-                        XAxis = 1,
-                        YAxis = 0,
-                        MoveDate = DateTime.Parse("2020-10-10")
-                    },
-                    new GameHistoryBL
-                    {
-                        PlayerId = PlayerId1,
-                        GameId = GameId,
-                        IsBot = false,
-                        XAxis = 0,
-                        YAxis = 2,
-                        MoveDate = DateTime.Parse("2020-10-10")
-                    },
-                };
-                bgh3 = new List<GameHistoryBL>
-                {
-                    new GameHistoryBL
-                    {
-                        PlayerId = PlayerId1,
-                        GameId = GameId,
-                        IsBot = false,
-                        XAxis = 1,
-                        YAxis = 1,
-                        MoveDate = DateTime.Parse("2020-10-10")
-                    },
-                    new GameHistoryBL
-                    {
-                        PlayerId = PlayerId2,
-                        GameId = GameId,
-                        IsBot = false,
-                        XAxis = 2,
-                        YAxis = 0,
-                        MoveDate = DateTime.Parse("2020-10-10")
-                    },
-                    new GameHistoryBL
-                    {
-                        PlayerId = PlayerId1,
-                        GameId = GameId,
-                        IsBot = false,
-                        XAxis = 2,
-                        YAxis = 2,
-                        MoveDate = DateTime.Parse("2020-10-10")
-                    },
-                    new GameHistoryBL
-                    {
-                        PlayerId = PlayerId2,
-                        GameId = GameId,
-                        IsBot = false,
-                        YAxis = 0,
-                        XAxis = 0,
-                        MoveDate = DateTime.Parse("2020-10-10")
-                    },
-                    new GameHistoryBL
-                    {
-                        PlayerId = PlayerId1,
-                        GameId = GameId,
-                        IsBot = false,
-                        XAxis = 1,
-                        YAxis = 0,
-                        MoveDate = DateTime.Parse("2020-10-10")
-                    },
-                    new GameHistoryBL
-                    {
-                        PlayerId = PlayerId2,
-                        GameId = GameId,
-                        IsBot = false,
-                        XAxis = 1,
-                        YAxis = 2,
-                        MoveDate = DateTime.Parse("2020-10-10")
-                    },
-                    new GameHistoryBL
-                    {
-                        PlayerId = PlayerId1,
-                        GameId = GameId,
-                        IsBot = false,
-                        XAxis = 0,
-                        YAxis = 1,
-                        MoveDate = DateTime.Parse("2020-10-10")
-                    },
-                    new GameHistoryBL
-                    {
-                        PlayerId = PlayerId2,
-                        GameId = GameId,
-                        IsBot = false,
-                        XAxis = 2,
-                        YAxis = 1,
-                        MoveDate = DateTime.Parse("2020-10-10")
-                    },
-                    new GameHistoryBL
-                    {
-                        PlayerId = PlayerId1,
-                        GameId = GameId,
-                        IsBot = false,
-                        XAxis = 0,
-                        YAxis = 2,
-                        MoveDate = DateTime.Parse("2020-10-10")
-                    },
-                };
-                bgh4 = new List<GameHistoryBL>
-                {
-                    new GameHistoryBL
-                    {
-                        PlayerId = PlayerId2,
-                        GameId = GameId,
-                        IsBot = true,
-                        XAxis = 2,
-                        YAxis = 2,
-                        MoveDate = DateTime.Parse("2020-10-10")
-                    }
-                };
-                b0 = new char[3, 3]
-                {
-                    {'\0', '\0', '\0'}, {'\0', 'X', '\0'}, {'\0', '\0', '\0'}
-                };
-                b1 = new char[3, 3]
-                {
-                    {'\0', 'X', '\0'}, {'\0', 'X', 'O'}, {'\0', 'X', 'O'}
-                };
-                b2 = new char[3, 3]
-                {
-                    {'\0', 'O', 'X'}, {'\0', 'X', 'O'}, {'X', '\0', '\0'}
-                };
-                b3 = new char[3, 3]
-                {
-                    {'O', 'X', 'O'}, {'X', 'X', 'O'}, {'X', 'O', 'X'}
-                };
-                bg0 = new GameBL
-                {
-                    Id = Id,
-                    GameId = GameId,
-                    Player1Id = PlayerId1,
-                    Player2Id = PlayerId2,
-                    IsPlayer2Bot = false,
-                    IsGameFinished = false
-                };
-                bg1 = new GameBL
-                {
-                    Id = Id,
-                    GameId = GameId,
-                    Player1Id = PlayerId1,
-                    Player2Id = null,
-                    IsPlayer2Bot = true,
-                    IsGameFinished = false
-                };
-            }
+            Assert.Equal(board, fieldChecker.Board);
         }
 
-        [Fact]
-        public void BoardInitTest()
+        [Theory]
+        [ClassData(typeof(FieldTestData2))]
+        public void Test2_LinesTest(IEnumerable<GameHistoryBL> list)
         {
-            IFieldChecker _fieldChecker = new FIeldChecker();
-            var data = new Colls();
-            _fieldChecker.BoardInit(data.bgh0);
-            Assert.Equal(data.b0, _fieldChecker.Board);
-            _fieldChecker.BoardInit(data.bgh1);
-            Assert.Equal(data.b1, _fieldChecker.Board);
-            _fieldChecker.BoardInit(data.bgh2);
-            Assert.Equal(data.b2, _fieldChecker.Board);
-            _fieldChecker.BoardInit(data.bgh3);
-            Assert.Equal(data.b3, _fieldChecker.Board);
+            IFieldChecker fieldChecker = new FIeldChecker();
+            fieldChecker.BoardInit(list);
+            Assert.False(fieldChecker.LinesCheck());
         }
 
-        [Fact]
-        public void LinesTest()
+        [Theory]
+        [ClassData(typeof(FieldTestData2))]
+        public void Test3_Diagonals(IEnumerable<GameHistoryBL> list)
         {
-            IFieldChecker _fieldChecker = new FIeldChecker();
-            var data = new Colls();
-            _fieldChecker.BoardInit(data.bgh0);
-            Assert.False(_fieldChecker.LinesCheck());
-            _fieldChecker.BoardInit(data.bgh1);
-            Assert.True(_fieldChecker.LinesCheck());
-            _fieldChecker.BoardInit(data.bgh2);
-            Assert.False(_fieldChecker.LinesCheck());
-            _fieldChecker.BoardInit(data.bgh3);
-            Assert.False(_fieldChecker.LinesCheck());
+            IFieldChecker fieldChecker = new FIeldChecker();
+            fieldChecker.BoardInit(list);
+            Assert.False(fieldChecker.DCheck());
         }
 
-        [Fact]
-        public void DiagonalsTest()
+        [Theory]
+        [ClassData(typeof(FieldTestData4))]
+        public void Test4_DoubleCell(GameHistoryBL bh0, IEnumerable<GameHistoryBL> bgh3, IEnumerable<GameHistoryBL> bgh4)
         {
-            IFieldChecker _fieldChecker = new FIeldChecker();
-            var data = new Colls();
-            _fieldChecker.BoardInit(data.bgh0);
-            Assert.False(_fieldChecker.DCheck());
-            _fieldChecker.BoardInit(data.bgh1);
-            Assert.False(_fieldChecker.DCheck());
-            _fieldChecker.BoardInit(data.bgh2);
-            Assert.False(_fieldChecker.DCheck());
-            _fieldChecker.BoardInit(data.bgh3);
-            Assert.False(_fieldChecker.DCheck());
-        }
-
-        [Fact]
-        public void DoubleCellTest()
-        {
-            IFieldChecker _fieldChecker = new FIeldChecker();
-            var data = new Colls();
+            IFieldChecker fieldChecker = new FIeldChecker();
             
-            _fieldChecker.BoardInit(data.bgh4);
-            _fieldChecker.NextMove = data.bh0;
-            Assert.False(_fieldChecker.DoubleCellCheck());
-            _fieldChecker.MakeMove();
-            _fieldChecker.BoardInit(data.bgh3);
-            Assert.True(_fieldChecker.DoubleCellCheck());
+            fieldChecker.BoardInit(bgh4);
+            fieldChecker.NextMove = bh0;
+            Assert.False(fieldChecker.DoubleCellCheck());
+
+            fieldChecker.MakeMove();
+            fieldChecker.BoardInit(bgh3);
+            Assert.True(fieldChecker.DoubleCellCheck());
         }
 
-        [Fact]
-        public void IndexTest()
+        [Theory]
+        [ClassData(typeof(FieldTestData5))]
+        public void Test5_Index(GameHistoryBL bh0, GameHistoryBL bh1, IEnumerable<GameHistoryBL> bgh4)
         {
-            IFieldChecker _fieldChecker = new FIeldChecker();
-            var data = new Colls();
+            IFieldChecker fieldChecker = new FIeldChecker();
 
-            _fieldChecker.BoardInit(data.bgh4);
-            _fieldChecker.NextMove = data.bh0;
-            Assert.False(_fieldChecker.IndexCheck());
+            fieldChecker.BoardInit(bgh4);
+            fieldChecker.NextMove = bh0;
+            Assert.False(fieldChecker.IndexCheck());
 
-            _fieldChecker.MakeMove();
-            _fieldChecker.NextMove = data.bh1;
-            Assert.True(_fieldChecker.IndexCheck());
+            fieldChecker.MakeMove();
+            fieldChecker.NextMove = bh1;
+            Assert.True(fieldChecker.IndexCheck());
         }
 
-        [Fact]
-        public void EndGameTest()
+        [Theory]
+        [ClassData(typeof(FieldTestData6))]
+        public void Test6_EndGameTest(IEnumerable<GameHistoryBL> bgh3)
         {
-            IFieldChecker _fieldChecker = new FIeldChecker();
-            var data = new Colls();
+            IFieldChecker fieldChecker = new FIeldChecker();
 
-            _fieldChecker.BoardInit(data.bgh3);
-            Assert.True(_fieldChecker.EndGameCheck(true));
+            fieldChecker.BoardInit(bgh3);
+            Assert.True(fieldChecker.EndGameCheck(true));
         }
 
-        [Fact]
-        public void LastPlayerTest()
+        [Theory]
+        [ClassData(typeof(FieldTestData7))]
+        public void Test7_LastPlayer(IEnumerable<GameHistoryBL> bgh0, GameHistoryBL bh0)
         {
-            IFieldChecker _fieldChecker = new FIeldChecker();
-            var data = new Colls();
+            IFieldChecker fieldChecker = new FIeldChecker();
 
-            _fieldChecker.BoardInit(data.bgh0);
-            _fieldChecker.NextMove = data.bh0;
-            Assert.True(_fieldChecker.LastPlayerCheck());
-            _fieldChecker.BoardInit(data.bgh4);
-            _fieldChecker.NextMove = data.bh3;
-            Assert.True(_fieldChecker.LastPlayerCheck());
+            fieldChecker.BoardInit(bgh0);
+            fieldChecker.NextMove = bh0;
+            Assert.True(fieldChecker.LastPlayerCheck());
         }
 
-        [Fact]
-        public void PlayerTest()
+        [Theory]
+        [ClassData(typeof(FieldTestData8))]
+        public void Test8_PlayerTest(IEnumerable<GameHistoryBL> bgh0, GameHistoryBL bh2, GameHistoryBL bh3, GameBL bg0, GameBL bg1)
         {
             IFieldChecker _fieldChecker = new FIeldChecker();
-            var data = new Colls();
 
-            _fieldChecker.BoardInit(data.bgh0);
-            _fieldChecker.NextMove = data.bh2;
-            Assert.True(_fieldChecker.GamePlayerCheck(data.bg0));
-            _fieldChecker.NextMove = data.bh3;
-            Assert.False(_fieldChecker.GamePlayerCheck(data.bg1));
+            _fieldChecker.BoardInit(bgh0);
+            _fieldChecker.NextMove = bh2;
+            Assert.True(_fieldChecker.GamePlayerCheck(bg0));
+            _fieldChecker.NextMove = bh3;
+            Assert.False(_fieldChecker.GamePlayerCheck(bg1));
         }
     }
 }

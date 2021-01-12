@@ -8,16 +8,13 @@ using TicTacToe.DL.Models;
 using TicTacToe.BL.Services;
 using TicTacToe.BL.Services.Implementation;
 using TicTacToe.DL.Services;
+using TicTacToe.Tests.TestData.Bot;
 using Xunit;
 
 namespace TicTacToe.Tests.UnitTests
 {
     public class BotServiceTests
     {
-
-        private static Guid GameId = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc10");
-        private static Guid PlayerId1 = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc11");
-
         public IBotService GetService(Mock<IGameServiceDL> mock)
         {
             IFieldChecker fieldChecker = new FIeldChecker();
@@ -25,40 +22,19 @@ namespace TicTacToe.Tests.UnitTests
             return new BotService(fieldChecker, mock.Object);
         }
 
-        [Fact]
-        public void NextMoveTest()
+        [Theory]
+        [ClassData(typeof(BotTestData1))]
+        public void Test1_NextMove(GameHistoryBL move1, GameHistoryDL move2, char[,] board)
         {
-            var user = new GameHistoryDL
-            {
-                PlayerId = PlayerId1,
-                GameId = GameId,
-                IsBot = false,
-                XAxis = 1,
-                YAxis = 1,
-                MoveDate = DateTime.Parse("2020-10-10")
-            };
-            var user2 = new GameHistoryBL
-            {
-                PlayerId = PlayerId1,
-                GameId = GameId,
-                IsBot = false,
-                XAxis = 1,
-                YAxis = 1,
-                MoveDate = DateTime.Parse("2020-10-10")
-            };
-
             var mock = new Mock<IGameServiceDL>();
-            mock.Setup(cfg => cfg.SavePlayerMoveAsync(user)).Returns(Task.FromResult(BL.Enum.CheckStateBL.None));
+            mock.Setup(cfg => cfg.SavePlayerMoveAsync(move2)).Returns(Task.FromResult(BL.Enum.CheckStateBL.None));
 
             var botService = GetService(mock);
-            var b0 = new char[3, 3]
-            {
-                {'\0', '\0', '\0'}, {'\0', 'X', '\0'}, {'\0', '\0', '\0'}
-            };
-            botService.Board = b0;
-            botService.GameHistoryBl = user2;
+            botService.Board = board;
+            botService.GameHistoryBl = move1;
             botService.MakeNextMove(false);
-            Assert.True(b0 == botService.Board);
+
+            Assert.True(board == botService.Board);
         }
     }
 }

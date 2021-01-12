@@ -11,6 +11,7 @@ using TicTacToe.BL.Services;
 using TicTacToe.BL.Services.Implementation;
 using TicTacToe.DL.Models;
 using TicTacToe.DL.Services;
+using TicTacToe.Tests.TestData.Statistic;
 using Xunit;
 using ResultStatus = TicTacToe.DL.Models.ResultStatus;
 
@@ -25,58 +26,36 @@ namespace TicTacToe.Tests.UnitTests
             return new StatisticServiceBL(mock.Object, mapper);
         }
 
-        private Guid Id = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc09");
-        private Guid GameId = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc10");
-        private Guid PlayerId = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc11");
-
-        [Fact]
-        public async Task GetStatistics()
+        [Theory]
+        [ClassData(typeof(StatisticTestData1))]
+        public async Task Test1_GetStatistics(Guid id, IEnumerable<GameResultDL> list1, IEnumerable<GameResultBL> list2)
         {
-            var stat = new GameResultDL {Id = Id, GameId = GameId, PlayerId = PlayerId, Result = ResultStatus.Won};
-            IEnumerable<GameResultDL> list1 = new List<GameResultDL> {stat};
-            var stat2 = new GameResultBL { Id = Id, GameId = GameId, PlayerId = PlayerId, Result = BL.Models.ResultStatus.Won };
-            IEnumerable<GameResultBL> list2 = new List<GameResultBL> { stat2 };
-
             var mock = new Mock<IStatisticServiceDL>();
-            mock.Setup(it => it.GetAllUserGamesAsync(Id)).Returns(Task.FromResult(list1));
+            mock.Setup(it => it.GetAllUserGamesAsync(id)).Returns(Task.FromResult(list1));
 
             var service = GetStatisticService(mock);
-            var result = await service.GetAllUserGamesAsync(Id);
+            var result = await service.GetAllUserGamesAsync(id);
 
             Assert.Equal(list2.Select(x => x.GameId), result.Select(x => x.GameId));
         }
 
-        [Fact]
-        public async Task GetHistory()
+        [Theory]
+        [ClassData(typeof(StatisticTestData2))]
+        public async Task Test2_GetHistory(Guid gameId, IEnumerable<GameHistoryDL> list1, IEnumerable<GameHistoryBL> list2)
         {
-            var history1 = new GameHistoryDL
-            {
-                Id = Id, GameId = GameId, PlayerId = PlayerId, IsBot = false, XAxis = 1, YAxis = 1,
-                MoveDate = DateTime.Parse("2020-10-10")
-            };
-            IEnumerable<GameHistoryDL> list1 = new List<GameHistoryDL> {history1};
-            var history2 = new GameHistoryBL
-            {
-                GameId = GameId, PlayerId = PlayerId, IsBot = false, XAxis = 1, YAxis = 1,
-                MoveDate = DateTime.Parse("2020-10-10")
-            };
-            IEnumerable<GameHistoryBL> list2 = new List<GameHistoryBL> { history2 };
-
             var mock = new Mock<IStatisticServiceDL>();
-            mock.Setup(it => it.GetGameHistoryAsync(GameId)).Returns(Task.FromResult(list1));
+            mock.Setup(it => it.GetGameHistoryAsync(gameId)).Returns(Task.FromResult(list1));
 
             var service = GetStatisticService(mock);
-            var result = await service.GetGameHistoryAsync(GameId);
+            var result = await service.GetGameHistoryAsync(gameId);
 
             Assert.Equal(list2.Select(x => x.GameId), result.Select(x => x.GameId));
         }
 
-        [Fact]
-        public async Task SaveMove()
+        [Theory]
+        [ClassData(typeof(StatisticTestData3))]
+        public async Task Test3_SaveMove(GameResultDL res1, GameResultBL res2)
         {
-            var res1 = new GameResultDL {Id = Id, GameId = GameId, PlayerId = PlayerId, Result = ResultStatus.Won};
-            var res2 = new GameResultBL { Id = Id, GameId = GameId, PlayerId = PlayerId, Result = BL.Models.ResultStatus.Won };
-
             var mock = new Mock<IStatisticServiceDL>();
             mock.Setup(it => it.SaveStatisticAsync(res1)).Returns(Task.FromResult(default(object)));
 
@@ -86,16 +65,10 @@ namespace TicTacToe.Tests.UnitTests
             Assert.True(result);
         }
 
-        [Fact]
-        public async Task Top10()
+        [Theory]
+        [ClassData(typeof(StatisticTestData4))]
+        public async Task Test4_Top10(IEnumerable<UserGamesStatisticBL> list1, IEnumerable<UserGamesStatisticDL> list2)
         {
-            var res1 = new UserGamesStatisticBL
-                {PlayerId = Id, GameCount = 10, WinCount = 5, LostCount = 3, DrawCount = 2};
-            IEnumerable<UserGamesStatisticBL> list1 = new List<UserGamesStatisticBL> {res1};
-            var res2 = new UserGamesStatisticDL
-                { PlayerId = Id, GameCount = 10, WinCount = 5, LostCount = 3, DrawCount = 2 };
-            IEnumerable<UserGamesStatisticDL> list2 = new List<UserGamesStatisticDL> { res2 };
-
             var mock = new Mock<IStatisticServiceDL>();
             mock.Setup(it => it.GetTop10PlayersAsync()).Returns(Task.FromResult(list2));
 

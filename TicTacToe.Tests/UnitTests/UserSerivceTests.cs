@@ -12,6 +12,7 @@ using TicTacToe.BL.Services;
 using TicTacToe.BL.Services.Implementation;
 using TicTacToe.DL.Models;
 using TicTacToe.DL.Services;
+using TicTacToe.Tests.TestData.User;
 using Xunit;
 
 namespace TicTacToe.Tests.UnitTests
@@ -34,36 +35,32 @@ namespace TicTacToe.Tests.UnitTests
             return new UserServiceBL(mock.Object, options, mapper);
         }
 
-        [Fact]
-        public async Task CreateUserTest()
+        [Theory]
+        [ClassData(typeof(UserTestData1))]
+        public async Task Test1_CreateUser(UserBL user0, UserBL user1, UserDL user2)
         {
-            UserBL user1 = new UserBL {Name = "Bradley", Email = "b@gmail.com", Password = "123"};
-            UserBL user12 = new UserBL { Name = "Bradley", Email = "b@gmail.com", Password = "" };
-            UserDL user2 = new UserDL {Id = Id, Name = "Bradley", Email = "b@gmail.com",};
             var mock = new Mock<IUserServiceDL>();
-            mock.Setup(it => it.CreateUserAsync(user2)).Returns(Task.FromResult(user1));
+            mock.Setup(it => it.CreateUserAsync(user2)).Returns(Task.FromResult(user0));
 
             var userService = GetUserService(mock);
-            var user = await userService.CreateUserAsync(user1);
+            var user = await userService.CreateUserAsync(user0);
             Assert.True(user);
 
-            mock.Setup(it => it.CreateUserAsync(user2)).Returns(Task.FromResult(user1));
+            mock.Setup(it => it.CreateUserAsync(user2)).Returns(Task.FromResult(user0));
             var userService1 = GetUserService(mock);
-            var user01 = await userService1.CreateUserAsync(user12);
+            var user01 = await userService1.CreateUserAsync(user1);
             Assert.False(user01);
 
-            mock.Setup(it => it.GetUserAsync(user1.Email)).Returns(Task.FromResult(user2));
-
+            mock.Setup(it => it.GetUserAsync(user0.Email)).Returns(Task.FromResult(user2));
             var userService12 = GetUserService(mock);
-            var user02 = await userService12.CreateUserAsync(user1);
+            var user02 = await userService12.CreateUserAsync(user0);
             Assert.False(user02);
         }
 
-        [Fact]
-        public async Task UpdateUserTest()
+        [Theory]
+        [ClassData(typeof(UserTestData2))]
+        public async Task Test2_UpdateUser(UserBL user1, UserDL user2)
         {
-            UserBL user1 = new UserBL {Id = Id, Name = "Bradley", Email = "b@gmail.com", Password = "123"};
-            UserDL user2 = new UserDL {Id = Id, Name = "Bradley", Email = "b@gmail.com",};
             var mock = new Mock<IUserServiceDL>();
             mock.Setup(it => it.UpdateUserAsync(user2)).Returns(Task.FromResult(user1));
 
@@ -72,39 +69,34 @@ namespace TicTacToe.Tests.UnitTests
             Assert.True(user);
         }
 
-        [Fact]
-        public async Task DeleteUserTest()
+        [Theory]
+        [ClassData(typeof(UserTestData3))]
+        public async Task Test3_DeleteUser(Guid id, UserDL user0)
         {
-            UserDL user2 = new UserDL {Id = Id,};
             var mock = new Mock<IUserServiceDL>();
-            mock.Setup(it => it.DeleteUserAsync(user2)).Returns(Task.FromResult(default(object)));
+            mock.Setup(it => it.DeleteUserAsync(user0)).Returns(Task.FromResult(default(object)));
 
             var userService = GetUserService(mock);
-            var user = await userService.DeleteUserAsync(Id);
+            var user = await userService.DeleteUserAsync(id);
             Assert.True(user);
         }
 
-        [Fact]
-        public async Task GetUserTest()
+        [Theory]
+        [ClassData(typeof(UserTestData4))]
+        public async Task Test4_GetUser(Guid id, UserDL user1)
         {
-            UserDL user1 = new UserDL {Id = Id, Name = "Bradley", Email = "b@gmail.com"};
-
             var mock = new Mock<IUserServiceDL>();
             mock.Setup(it => it.GetUserAsync(Id)).Returns(Task.FromResult(user1));
 
             var userService = GetUserService(mock);
             var user = await userService.GetUserAsync(Id);
-            Assert.Equal(Id, user.Id.Value);
+            Assert.Equal(id, user.Id.Value);
         }
 
-        [Fact]
-        public async Task GetUsersTest()
+        [Theory]
+        [ClassData(typeof(UserTestData5))]
+        public async Task Test5_GetUsers(IEnumerable<UserDL> list, IEnumerable<UserBL> list2)
         {
-            UserBL user2 = new UserBL {Id = Id, Name = "Bradley", Email = "b@gmail.com"};
-            UserDL user1 = new UserDL {Id = Id, Name = "Bradley", Email = "b@gmail.com"};
-            IEnumerable<UserDL> list = new List<UserDL> {user1};
-            IEnumerable<UserBL> list2 = new List<UserBL> {user2};
-
             var mock = new Mock<IUserServiceDL>();
             mock.Setup(it => it.GetAllUsersAsync(1, 10)).Returns(Task.FromResult(list));
 
