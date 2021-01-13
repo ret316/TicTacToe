@@ -48,9 +48,7 @@ namespace TicTacToe.DL.Services.Implementation
         {
             //TODO make a check 
 
-            _dataBaseContext.Attach(user);
-            _dataBaseContext.Remove(user);
-
+            _dataBaseContext.Entry(user).State = EntityState.Deleted;
             await _dataBaseContext.SaveChangesAsync();
         }
     }

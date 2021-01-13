@@ -105,5 +105,24 @@ namespace TicTacToe.Tests.UnitTests
 
             Assert.Equal(CheckStateBL.None, result);
         }
+
+        [Theory]
+        [ClassData(typeof(GameTestData5))]
+        public async Task Test5_SaveMove(Guid gameId, GameDL gd0, IEnumerable<GameHistoryDL> gde1, GameHistoryDL ghd0, GameHistoryBL ghb0, GameResultBL grb0)
+        {
+            var mock1 = new Mock<IGameServiceDL>();
+            var mock2 = new Mock<IStatisticServiceBL>();
+            var mock3 = new Mock<IBotService>();
+
+            mock1.Setup(cfg => cfg.GetGameHistoriesAsync(gameId)).Returns(Task.FromResult(gde1));
+            mock1.Setup(cfg => cfg.GetGameByGameIdAsync(gameId)).Returns(Task.FromResult(gd0));
+            mock1.Setup(cfg => cfg.SavePlayerMoveAsync(ghd0)).Returns(Task.FromResult(default(object)));
+            mock2.Setup(cfg => cfg.SaveStatisticAsync(grb0)).Returns(Task.FromResult(true));
+
+            var service = GetGameService(mock1, mock2, mock3);
+            var result = await service.SavePlayerMoveAsync(ghb0);
+
+            Assert.Equal(CheckStateBL.None, result);
+        }
     }
 }

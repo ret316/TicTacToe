@@ -59,7 +59,7 @@ namespace TicTacToe.BL.Services.Implementation
             return games.Select(g => _mapper.Map<GameBL>(g));
         }
 
-        private GameDL game;
+        private GameDL _game;
 
         private async Task WinnerLoser()
         {
@@ -67,7 +67,7 @@ namespace TicTacToe.BL.Services.Implementation
             var win = new WinHelper(_statisticServiceBL)
             {
                 Board = _fieldChecker.Board,
-                Game = _mapper.Map<GameBL>(game)
+                Game = _mapper.Map<GameBL>(_game)
             };
             await win.FindWinnerAndLoser();
         }
@@ -77,14 +77,14 @@ namespace TicTacToe.BL.Services.Implementation
         {
             var historyDL = await _gameServiceDL.GetGameHistoriesAsync(historyBL.GameId);
             var history = historyDL.Select(h => _mapper.Map<GameHistoryBL>(h));
-            game = await _gameServiceDL.GetGameByGameIdAsync(historyBL.GameId);
+            _game = await _gameServiceDL.GetGameByGameIdAsync(historyBL.GameId);
 
             _fieldChecker.BoardInit(history);
             _fieldChecker.NextMove = historyBL;
 
             var modelForSave = _mapper.Map<GameHistoryDL>(historyBL);
 
-            if (_fieldChecker.GamePlayerCheck(_mapper.Map<GameBL>(game)))
+            if (_fieldChecker.GamePlayerCheck(_mapper.Map<GameBL>(_game)))
             {
                 return CheckStateBL.GamePlayerCheck;
             }
@@ -94,7 +94,7 @@ namespace TicTacToe.BL.Services.Implementation
                 return CheckStateBL.PreviousPlayerCheck;
             }
 
-            if (_fieldChecker.EndGameCheck(game.IsGameFinished))
+            if (_fieldChecker.EndGameCheck(_game.IsGameFinished))
             {
                 return CheckStateBL.EndGameCheck;
             }
@@ -113,12 +113,12 @@ namespace TicTacToe.BL.Services.Implementation
 
             //var check = _fieldChecker.GamePlayerCheck(new GameBL
             //                        {
-            //                            Player1Id = game.Player1Id,
-            //                            Player2Id = game.Player2Id,
-            //                            IsPlayer2Bot = game.IsPlayer2Bot
+            //                            Player1Id = _game.Player1Id,
+            //                            Player2Id = _game.Player2Id,
+            //                            IsPlayer2Bot = _game.IsPlayer2Bot
             //                        })
             //    .Bind(gp => _fieldChecker.LastPlayerCheck()
-            //        .Bind(lp => _fieldChecker.EndGameCheck(game.IsGameFinished)
+            //        .Bind(lp => _fieldChecker.EndGameCheck(_game.IsGameFinished)
             //            .Bind(eg => _fieldChecker.IndexCheck()
             //                .Bind(ic => _fieldChecker.DoubleCellCheck()
             //                    .Bind(dc => _fieldChecker.LinesCheck(() => _gameServiceDL.SavePlayerMoveAsync(modelForSave))
@@ -151,15 +151,20 @@ namespace TicTacToe.BL.Services.Implementation
                 if (history.Count() + 1 > Math.Pow(IFieldChecker.BOARD_SIZE, 2))
                 {
                     await SetGameAsFinished();
-                    await _statisticServiceBL.SaveStatisticAsync(GameResultWithBot(game.Player1Id));
-                    if (!game.IsPlayer2Bot)
+                    await _statisticServiceBL.SaveStatisticAsync(GameResultWithBot(_game.Player1Id));
+                    if (!_game.IsPlayer2Bot)
                     {
-                        await _statisticServiceBL.SaveStatisticAsync(GameResultWithBot(game.Player2Id.Value));
+                        await _statisticServiceBL.SaveStatisticAsync(GameResultWithBot(_game.Player2Id.Value));
                     }
                     return CheckStateBL.EndGameCheck;
                 }
                 //TODO remove in future
-                return await BotMove(history, historyBL, false);
+                if (_game.IsPlayer2Bot)
+                {
+                    return await BotMove(history, historyBL, false);
+                }
+
+                return CheckStateBL.None;
             }
             else
             {
@@ -179,7 +184,7 @@ namespace TicTacToe.BL.Services.Implementation
                 await _statisticServiceBL.SaveStatisticAsync(new GameResultBL
                 {
                     Id = Guid.NewGuid(),
-                    GameId = game.GameId,
+                    GameId = _game.GameId,
                     PlayerId = history.First().PlayerId.Value,
                     Result = Models.ResultStatus.Lost
                 });
@@ -189,7 +194,7 @@ namespace TicTacToe.BL.Services.Implementation
             if (history.Count() + 2 > Math.Pow(IFieldChecker.BOARD_SIZE, 2))
             {
                 await SetGameAsFinished();
-                await _statisticServiceBL.SaveStatisticAsync(GameResultWithBot(game.Player1Id));
+                await _statisticServiceBL.SaveStatisticAsync(GameResultWithBot(_game.Player1Id));
 
                 return CheckStateBL.EndGameCheck;
             }
@@ -201,7 +206,7 @@ namespace TicTacToe.BL.Services.Implementation
             return new GameResultBL
             {
                 Id = Guid.NewGuid(),
-                GameId = game.GameId,
+                GameId = _game.GameId,
                 PlayerId = playerId,
                 Result = Models.ResultStatus.Draw
             };
@@ -209,8 +214,8 @@ namespace TicTacToe.BL.Services.Implementation
 
         private async Task SetGameAsFinished()
         {
-            game.IsGameFinished = true;
-            await _gameServiceDL.SetGameAsFinished(game);
+            _game.IsGameFinished = true;
+            await _gameServiceDL.SetGameAsFinished(_game);
         }
 
         public async Task<bool> SetGameAsFinished(Guid gameId)

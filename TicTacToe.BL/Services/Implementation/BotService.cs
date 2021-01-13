@@ -16,7 +16,7 @@ namespace TicTacToe.BL.Services.Implementation
         private IGameServiceDL _gameServiceDL;
         private readonly IStatisticServiceBL _statisticServiceBL;
         public char[,] Board { get; set; }
-        private GameHistoryBL gameHistory;
+        private GameHistoryBL _gameHistory;
 
         public BotService(IFieldChecker fieldChecker, IGameServiceDL gameServiceDL)
         {
@@ -26,7 +26,7 @@ namespace TicTacToe.BL.Services.Implementation
 
         public GameHistoryBL GameHistoryBl
         {
-            set => gameHistory = value;
+            set => _gameHistory = value;
         }
 
         public CheckStateBL MakeNextMove(bool isExternalBot)
@@ -49,8 +49,8 @@ namespace TicTacToe.BL.Services.Implementation
             }
             else
             {
-                xAxis = gameHistory.XAxis; yAxis = gameHistory.YAxis;
-                Board[gameHistory.YAxis, gameHistory.XAxis] = 'O';
+                xAxis = _gameHistory.XAxis; yAxis = _gameHistory.YAxis;
+                Board[_gameHistory.YAxis, _gameHistory.XAxis] = 'O';
             }
 
             _fieldChecker.Board = Board;
@@ -73,7 +73,7 @@ namespace TicTacToe.BL.Services.Implementation
         {
             _gameServiceDL.SavePlayerMoveAsync(new GameHistoryDL
             {
-                GameId = gameHistory.GameId,
+                GameId = _gameHistory.GameId,
                 PlayerId = null,
                 IsBot = true,
                 XAxis = x,

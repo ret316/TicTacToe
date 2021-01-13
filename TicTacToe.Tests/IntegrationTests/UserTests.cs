@@ -16,90 +16,57 @@ using TicTacToe.DL.Config;
 using TicTacToe.WebApi.Models;
 using Xunit;
 using System.Linq;
+using System.Net.Http.Headers;
 using Serilog;
 using TicTacToe.DL.Models;
+using TicTacToe.Tests.Config;
 using TicTacToe.Tests.TestDataI.User;
 
 namespace TicTacToe.Tests.IntegrationTests
 {
-    public class UserTests : IDisposable
+    public class UserTests : ClientConfig, IDisposable
     {
 
-        public TestServer server;
-        public HttpClient client;
-        public string conString;
-
         private static Guid Id = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc09");
+        private static Guid IdA = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc40");
 
         public UserTests()
         {
             client = GetConfiguration();
 
-            using (var db = ContextBuiler())
+            using (var db = ContextBuilder())
             {
                 var (hash, salt) = GetPassHash("123456");
                 var user0 = new UserDL
                 {
-                    Id = Id,
+                    Id = IdA,
                     Name = "Alex",
-                    Email = "a@ss.com",
+                    Email = "a1@ss.com",
                     Password = hash,
                     PasswordSalt = salt
                 };
 
-                db.Users.Add(user0);
-                db.SaveChanges();
-            }
-        }
-
-        private HttpClient GetConfiguration()
-        {
-
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("test_appsettings.json", true, true)
-                .AddEnvironmentVariables().Build();
-
-            conString = builder.GetConnectionString("DbConString");
-
-            server ??= new TestServer(new WebHostBuilder()
-                .UseEnvironment("Debug")
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseConfiguration(builder).UseStartup<Startup>()
-                .UseSerilog((hostingContext, loggerConfiguration) =>
+                try
                 {
-                    loggerConfiguration
-                        .ReadFrom.Configuration(hostingContext.Configuration)
-                        .Enrich.FromLogContext()
-                        .Enrich.WithProperty("ApplicationName", typeof(Program).Assembly.GetName().Name)
-                        .Enrich.WithProperty("Environment", hostingContext.HostingEnvironment);
-                    loggerConfiguration.Enrich.WithProperty("DebuggerAttached", Debugger.IsAttached);
-                })
-            );
+                    db.Users.Add(user0);
+                    db.SaveChanges();
+                }
+                catch
+                {
 
-            return server.CreateClient();
-        }
+                }
 
-        private DataBaseContext ContextBuiler()
-        {
-            var optionsBuiler = new DbContextOptionsBuilder<DataBaseContext>();
-            var options = optionsBuiler.UseNpgsql(conString).Options;
-            return new DataBaseContext(options);
-        }
-
-        private (byte[] hash, byte[] salt) GetPassHash(string password)
-        {
-            using (var sha = new HMACSHA512())
-            {
-                return (sha.ComputeHash(Encoding.UTF8.GetBytes(password)), sha.Key);
             }
+
+            GetToken();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
 
         public void Dispose()
         {
-            using (var db = ContextBuiler())
+            using (var db = ContextBuilder())
             {
-                db.Database.ExecuteSqlCommand("DELETE FROM \"Users\"");
+                db.Database.ExecuteSqlCommand("DELETE FROM \"Users\" WHERE \"Id\" != 'F403AA84-B314-4044-93C3-AD514D35EA4A'");
             }
         }
 
@@ -120,7 +87,7 @@ namespace TicTacToe.Tests.IntegrationTests
         {
             var resp = await client.PostAsync("api/users", content);
 
-            await using (var db = ContextBuiler())
+            await using (var db = ContextBuilder())
             {
                 var us = await db.Users.FirstOrDefaultAsync(x => x.Name == user.Name && x.Email == user.Email);
                 Assert.True(user.Name == us.Name && user.Email == us.Email);
@@ -147,8 +114,8 @@ namespace TicTacToe.Tests.IntegrationTests
         {
             var (user, content) = GetContent();
 
-            var resp = await client.PutAsync($"api/users/{Id}", content);
-            await using (var db = ContextBuiler())
+            var resp = await client.PutAsync($"api/users/{IdA}", content);
+            await using (var db = ContextBuilder())
             {
                 var us1 = await db.Users.FirstOrDefaultAsync(x => x.Email == user.Email);
                 Assert.True(user.Name == us1.Name && user.Email == us1.Email);
@@ -158,8 +125,8 @@ namespace TicTacToe.Tests.IntegrationTests
         [Fact]
         public async Task DeleteUser()
         {
-            var res = await client.DeleteAsync($"api/users/{Id}");
-            await using (var db = ContextBuiler())
+            var res = await client.DeleteAsync($"api/users/{IdA}");
+            await using (var db = ContextBuilder())
             {
                 var user = await db.Users.FirstOrDefaultAsync(x => x.Id == Id);
                 Assert.Null(user);

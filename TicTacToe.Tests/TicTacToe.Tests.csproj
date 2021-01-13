@@ -33,4 +33,8 @@
     <ProjectReference Include="..\TicTacToe\TicTacToe.WebApi.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="TestDataI\Statistic\" />
+  </ItemGroup>
+
 </Project>

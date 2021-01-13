@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
+using TicTacToe.BL.Services;
 
 namespace TicTacToe.BL.Models
 {
@@ -12,7 +14,7 @@ namespace TicTacToe.BL.Models
         /// <summary>
         /// Game id
         /// </summary>
-        public Guid GameId { get; set; }
+        [Required] public Guid GameId { get; set; }
         /// <summary>
         /// Player id, if not bot move
         /// </summary>
@@ -20,15 +22,15 @@ namespace TicTacToe.BL.Models
         /// <summary>
         /// Is player bot
         /// </summary>
-        public bool IsBot { get; set; }
+        [Required] public bool IsBot { get; set; }
         /// <summary>
         /// X axis
         /// </summary>
-        public int XAxis { get; set; }
+        [Required] [Range(0, IFieldChecker.BOARD_SIZE)] public int XAxis { get; set; }
         /// <summary>
         /// Y axis
         /// </summary>
-        public int YAxis { get; set; }
+        [Required] [Range(0, IFieldChecker.BOARD_SIZE)] public int YAxis { get; set; }
         /// <summary>
         /// Move date
         /// </summary>

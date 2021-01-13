@@ -13,26 +13,22 @@ namespace TicTacToe.DL.Config
     {
         public DataBaseContext(DbContextOptions<DataBaseContext> options) : base(options)
         {
-        //    Database.EnsureDeleted();
+            //Database.EnsureDeleted();
             Database.EnsureCreated();
-        //    var tuple = GetPassHash("123456");
-        //    Users.Add(new UserDL
-        //    {
-        //        Id = Guid.Parse("f9c0105f-13f1-47d6-805d-6c824d406c35"),
-        //        Name = "Andrew",
-        //        Email = "a@gmail.com",
-        //        Password = tuple.hash,
-        //        PasswordSalt = tuple.salt
-        //    });
-        //    Users.Add(new UserDL
-        //    {
-        //        Id = Guid.Parse("7baf27a8-a617-477b-b684-199699f0cabc"),
-        //        Name = "Greg",
-        //        Email = "g@gmail.com",
-        //        Password = tuple.hash,
-        //        PasswordSalt = tuple.salt
-        //    });
-        //    SaveChanges();
+            var u = Users.FirstOrDefault(x => x.Id == Guid.Parse("F403AA84-B314-4044-93C3-AD514D35EA4A"));
+            if (u == null)
+            {
+                var tuple = GetPassHash("123456");
+                Users.Add(new UserDL
+                {
+                    Id = Guid.Parse("F403AA84-B314-4044-93C3-AD514D35EA4A"),
+                    Name = "test1",
+                    Email = "test1@gmail.com",
+                    Password = tuple.hash,
+                    PasswordSalt = tuple.salt
+                });
+                SaveChanges();
+            }
         }
 
         private (byte[] hash, byte[] salt) GetPassHash(string password)

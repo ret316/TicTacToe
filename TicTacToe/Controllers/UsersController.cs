@@ -9,6 +9,7 @@ using TicTacToe.WebApi.Services;
 
 namespace TicTacToe.WebApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -26,7 +27,7 @@ namespace TicTacToe.WebApi.Controllers
         /// <param name="pageNumber">Selected page number</param>
         /// <param name="pageSize">Number of objects in pagination</param>
         /// <returns></returns>
-        [HttpGet] public async Task<IActionResult> GetAllUsersAsync(int pageNumber, int pageSize)
+         [HttpGet] public async Task<IActionResult> GetAllUsersAsync(int pageNumber, int pageSize)
         {
             var users = await _userService.GetAllUsersAsync(pageNumber, pageSize);
 
@@ -62,7 +63,7 @@ namespace TicTacToe.WebApi.Controllers
         /// </summary>
         /// <param name="user">User model</param>
         /// <returns></returns>
-        [HttpPost] public async Task<IActionResult> CreateUserAsync([FromBody] UserModel user)
+        [AllowAnonymous] [HttpPost] public async Task<IActionResult> CreateUserAsync([FromBody] UserModel user)
         {
             var result = await _userService.CreateUserAsync(user);
 

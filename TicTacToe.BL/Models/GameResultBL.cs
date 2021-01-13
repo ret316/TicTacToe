@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace TicTacToe.BL.Models
@@ -23,18 +24,18 @@ namespace TicTacToe.BL.Models
         /// <summary>
         /// Result id
         /// </summary>
-        public Guid Id { get; set; }
+        [Required] public Guid Id { get; set; }
         /// <summary>
         /// Game id
         /// </summary>
-        public Guid GameId { get; set; }
+        [Required] public Guid GameId { get; set; }
         /// <summary>
         /// Player id
         /// </summary>
-        public Guid PlayerId { get; set; }
+        [Required] public Guid PlayerId { get; set; }
         /// <summary>
         /// Game score
         /// </summary>
-        public ResultStatus Result { get; set; }
+        [Required] public ResultStatus Result { get; set; }
     }
 }

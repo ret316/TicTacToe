@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using TicTacToe.WebApi.Models;
 using TicTacToe.WebApi.Services;
 
@@ -10,6 +11,7 @@ using TicTacToe.WebApi.Services;
 
 namespace TicTacToe.WebApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")] [ApiController] public class StatisticsController : ControllerBase
     {
         private readonly IStatisticService _statisticService;
@@ -23,7 +25,7 @@ namespace TicTacToe.WebApi.Controllers
         /// Method for getting game statistic
         /// <para>GET api/statistics/games/id</para>
         /// </summary>
-        /// <param name="id">Game id</param>
+        /// <param name="id">User id</param>
         /// <returns></returns>
         [HttpGet("games/{id}")] public async Task<IActionResult> GetGamesAsync(Guid id)
         {

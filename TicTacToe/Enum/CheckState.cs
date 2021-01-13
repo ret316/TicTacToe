@@ -42,6 +42,10 @@ namespace TicTacToe.WebApi.Enum
         /// <summary>
         /// Player not from that game
         /// </summary>
-        [Description("Player not from this game")] GamePlayerCheck = 64
+        [Description("Player not from this game")] GamePlayerCheck = 64,
+        /// <summary>
+        /// Player lost
+        /// </summary>
+        [Description("Player lost")]BotWonCheck = 128
     }
 }

@@ -112,10 +112,8 @@ namespace TicTacToe.BL.Services.Implementation
             //var result = true;
             try
             {
-                await _userServiceDL.DeleteUserAsync(new UserDL
-                {
-                    Id = id
-                });
+                var user = await _userServiceDL.GetUserAsync(id);
+                await _userServiceDL.DeleteUserAsync(user);
                 return true;
             }
             catch (Exception ex)
@@ -146,7 +144,7 @@ namespace TicTacToe.BL.Services.Implementation
                 {
                     new Claim(ClaimTypes.Name, user.Id.ToString())
                 }),
-                Expires = DateTime.Now.AddDays(1),
+                Expires = DateTime.Now.AddHours(2),
                 SigningCredentials =
                     new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };

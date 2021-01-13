@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace TicTacToe.BL.Models
 {
@@ -18,10 +19,10 @@ namespace TicTacToe.BL.Models
         /// <summary>
         /// User email
         /// </summary>
-        public string Email { get; set; }
+        [Required] public string Email { get; set; }
         /// <summary>
         /// User password
         /// </summary>
-        public string Password { get; set; }
+        [Required] public string Password { get; set; }
     }
 }

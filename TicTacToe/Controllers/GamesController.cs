@@ -4,12 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using TicTacToe.WebApi.Extensions;
 using TicTacToe.WebApi.Models;
 using TicTacToe.WebApi.Services;
 
 namespace TicTacToe.WebApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")] [ApiController]
     public class GamesController : ControllerBase
     {

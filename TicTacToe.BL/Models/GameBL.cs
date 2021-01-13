@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace TicTacToe.BL.Models
@@ -20,7 +21,7 @@ namespace TicTacToe.BL.Models
         /// <summary>
         /// Player 1 id
         /// </summary>
-        public Guid Player1Id { get; set; }
+        [Required] public Guid Player1Id { get; set; }
         /// <summary>
         /// Player 2 id
         /// </summary>
@@ -28,10 +29,10 @@ namespace TicTacToe.BL.Models
         /// <summary>
         /// Is game with bot
         /// </summary>
-        public bool IsPlayer2Bot { get; set; }
+        [Required] public bool IsPlayer2Bot { get; set; }
         /// <summary>
         /// Is game ended, not used in creation
         /// </summary>
-        public bool IsGameFinished { get; set; }
+        [Required] public bool IsGameFinished { get; set; }
     }
 }
