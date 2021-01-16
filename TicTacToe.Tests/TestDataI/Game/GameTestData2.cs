@@ -12,13 +12,13 @@ namespace TicTacToe.Tests.TestDataI.Game
     {
         private static Guid Id = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc09");
         private static Guid Id2 = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc14");
-        private static Guid GameId = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc50");
+        private static Guid GameId = Guid.Parse("65386E4A-F1B9-4131-928A-63ED06B9A961");
         private static Guid GameId2 = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc15");
         private static Guid PlayerId1 = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc11");
         private static Guid PlayerId2 = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc12");
         private static DateTime date = DateTime.Parse("2020-10-10");
 
-        private GameHistoryModel gh1 = new GameHistoryModel
+        private GameHistory gh1 = new GameHistory
         {
             GameId = GameId,
             PlayerId = PlayerId1,
@@ -27,7 +27,7 @@ namespace TicTacToe.Tests.TestDataI.Game
             IsBot = false,
             MoveDate = DateTime.Now
         };
-        GameHistoryModel gh2 = new GameHistoryModel
+        GameHistory gh2 = new GameHistory
         {
             GameId = GameId2,
             PlayerId = PlayerId1,

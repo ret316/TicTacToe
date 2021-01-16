@@ -16,25 +16,25 @@ namespace TicTacToe.WebApi.Services
         /// Method for getting all games
         /// </summary>
         /// <returns>Collection of games</returns>
-        Task<IEnumerable<GameModel>> GetAllGamesAsync();
+        Task<IEnumerable<Game>> GetAllGamesAsync();
         /// <summary>
         /// Method for getting games that user had played
         /// </summary>
         /// <param name="id">User id</param>
         /// <returns>Collection of games</returns>
-        Task<IEnumerable<GameModel>> GetGamesByUserAsync(Guid id);
+        Task<IEnumerable<Game>> GetGamesByUserAsync(Guid id);
         /// <summary>
         /// Method for game creation
         /// </summary>
         /// <param name="game">Game model</param>
         /// <returns></returns>
-        Task<bool> CreateGameAsync(GameModel game);
+        Task<bool> CreateGameAsync(Game game);
         /// <summary>
         /// Method for saving players last move
         /// </summary>
         /// <param name="history">Game history model</param>
         /// <returns>Move status</returns>
-        Task<CheckState> SavePlayerMoveAsync(GameHistoryModel history);
+        Task<CheckState> SavePlayerMoveAsync(GameHistory history);
         /// <summary>
         /// Method for updating game as finished
         /// </summary>

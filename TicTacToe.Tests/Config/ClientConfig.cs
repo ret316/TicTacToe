@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Serilog;
-using TicTacToe.DL.Config;
+using TicTacToe.DataComponent.Config;
 using TicTacToe.WebApi.Models;
 
 namespace TicTacToe.Tests.Config
@@ -25,12 +25,12 @@ namespace TicTacToe.Tests.Config
 
         protected void GetToken()
         {
-            var user = new UserAuthModel { Email = "test1@gmail.com", Password = "123456" };
+            var user = new UserAuth { Email = "test1@gmail.com", Password = "123456" };
             var json = JsonConvert.SerializeObject(user);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var res = client.PostAsync("api/users/authenticate", content).Result;
             var d = res.Content.ReadAsStringAsync().Result;
-            var r1 = JsonConvert.DeserializeObject<AuthUserModel>(d);
+            var r1 = JsonConvert.DeserializeObject<AuthUser>(d);
             token = r1.Token;
         }
 
@@ -62,7 +62,7 @@ namespace TicTacToe.Tests.Config
             return server.CreateClient();
         }
 
-        protected DataBaseContext ContextBuilder()
+        public DataBaseContext ContextBuilder()
         {
             var optionsBuiler = new DbContextOptionsBuilder<DataBaseContext>();
             var options = optionsBuiler.UseNpgsql(conString).Options;

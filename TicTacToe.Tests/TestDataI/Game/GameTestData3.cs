@@ -10,13 +10,13 @@ namespace TicTacToe.Tests.TestDataI.Game
 {
     public class GameTestData3 : IEnumerable<object[]>
     {
-        private static Guid GameId = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc10");
+        private static Guid GameId = Guid.Parse("65386E4A-F1B9-4131-928A-63ED06B9A960");
         private static Guid PlayerId1 = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc11");
         private static Guid PlayerId2 = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc12");
 
         private static IEnumerable<StringContent> list = new List<StringContent>
         {
-            new StringContent(JsonConvert.SerializeObject(new GameHistoryModel
+            new StringContent(JsonConvert.SerializeObject(new GameHistory
             {
                 PlayerId = PlayerId1,
                 GameId = GameId,
@@ -25,7 +25,7 @@ namespace TicTacToe.Tests.TestDataI.Game
                 YAxis = 1,
                 MoveDate = DateTime.Parse("2020-10-10")
             }), Encoding.UTF8, "application/json"),
-            new StringContent(JsonConvert.SerializeObject(new GameHistoryModel
+            new StringContent(JsonConvert.SerializeObject(new GameHistory
             {
                 PlayerId = PlayerId2,
                 GameId = GameId,
@@ -34,7 +34,7 @@ namespace TicTacToe.Tests.TestDataI.Game
                 YAxis = 2,
                 MoveDate = DateTime.Parse("2020-10-11")
             }), Encoding.UTF8, "application/json"),
-            new StringContent(JsonConvert.SerializeObject(new GameHistoryModel
+            new StringContent(JsonConvert.SerializeObject(new GameHistory
             {
                 PlayerId = PlayerId1,
                 GameId = GameId,
@@ -43,7 +43,7 @@ namespace TicTacToe.Tests.TestDataI.Game
                 YAxis = 0,
                 MoveDate = DateTime.Parse("2020-10-12")
             }), Encoding.UTF8, "application/json"),
-            new StringContent(JsonConvert.SerializeObject(new GameHistoryModel
+            new StringContent(JsonConvert.SerializeObject(new GameHistory
             {
                 PlayerId = PlayerId2,
                 GameId = GameId,
@@ -52,7 +52,7 @@ namespace TicTacToe.Tests.TestDataI.Game
                 YAxis = 1,
                 MoveDate = DateTime.Parse("2020-10-13")
             }), Encoding.UTF8, "application/json"),
-            new StringContent(JsonConvert.SerializeObject(new GameHistoryModel
+            new StringContent(JsonConvert.SerializeObject(new GameHistory
             {
                 PlayerId = PlayerId1,
                 GameId = GameId,

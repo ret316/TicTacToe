@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Moq;
-using TicTacToe.BL.Models;
-using TicTacToe.DL.Models;
-using TicTacToe.BL.Services;
-using TicTacToe.BL.Services.Implementation;
-using TicTacToe.DL.Services;
+using TicTacToe.BusinessComponent.Models;
+using TicTacToe.DataComponent.Models;
+using TicTacToe.BusinessComponent.Services;
+using TicTacToe.BusinessComponent.Services.Implementation;
+using TicTacToe.DataComponent.Services;
 using TicTacToe.Tests.TestData.Bot;
 using Xunit;
 
@@ -15,7 +15,7 @@ namespace TicTacToe.Tests.UnitTests
 {
     public class BotServiceTests
     {
-        public IBotService GetService(Mock<IGameServiceDL> mock)
+        public IBotService GetService(Mock<DataComponent.Services.IGameService> mock)
         {
             IFieldChecker fieldChecker = new FIeldChecker();
 
@@ -24,14 +24,14 @@ namespace TicTacToe.Tests.UnitTests
 
         [Theory]
         [ClassData(typeof(BotTestData1))]
-        public void Test1_NextMove(GameHistoryBL move1, GameHistoryDL move2, char[,] board)
+        public void Test1_NextMove(BusinessComponent.Models.GameHistory move1, DataComponent.Models.GameHistory move2, char[,] board)
         {
-            var mock = new Mock<IGameServiceDL>();
-            mock.Setup(cfg => cfg.SavePlayerMoveAsync(move2)).Returns(Task.FromResult(BL.Enum.CheckStateBL.None));
+            var mock = new Mock<DataComponent.Services.IGameService>();
+            mock.Setup(cfg => cfg.SavePlayerMoveAsync(move2)).Returns(Task.FromResult(BusinessComponent.Enum.CheckState.None));
 
             var botService = GetService(mock);
             botService.Board = board;
-            botService.GameHistoryBl = move1;
+            botService.GameHistory = move1;
             botService.MakeNextMove(false);
 
             Assert.True(board == botService.Board);

@@ -2,9 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using TicTacToe.BL.Models;
-using TicTacToe.DL.Models;
-using ResultStatus = TicTacToe.DL.Models.ResultStatus;
+using TicTacToe.BusinessComponent.Models;
+using TicTacToe.DataComponent.Models;
 
 namespace TicTacToe.Tests.TestData.Statistic
 {
@@ -14,8 +13,8 @@ namespace TicTacToe.Tests.TestData.Statistic
         private static Guid GameId = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc10");
         private static Guid PlayerId = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc11");
 
-        GameResultDL res1 = new GameResultDL { Id = Id, GameId = GameId, PlayerId = PlayerId, Result = ResultStatus.Won };
-        GameResultBL res2 = new GameResultBL { Id = Id, GameId = GameId, PlayerId = PlayerId, Result = BL.Models.ResultStatus.Won };
+        DataComponent.Models.GameResult res1 = new DataComponent.Models.GameResult { Id = Id, GameId = GameId, PlayerId = PlayerId, Result = DataComponent.Enum.ResultStatus.Won };
+        BusinessComponent.Models.GameResult res2 = new BusinessComponent.Models.GameResult { Id = Id, GameId = GameId, PlayerId = PlayerId, Result = BusinessComponent.Enum.ResultStatus.Won };
 
         public IEnumerator<object[]> GetEnumerator()
         {

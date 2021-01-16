@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using TicTacToe.BL.Enum;
-using TicTacToe.BL.Models;
+using TicTacToe.BusinessComponent.Enum;
+using TicTacToe.BusinessComponent.Models;
 
-namespace TicTacToe.BL.Services
+namespace TicTacToe.BusinessComponent.Services
 {
     //TODO create external bot
     /// <summary>
@@ -17,11 +17,11 @@ namespace TicTacToe.BL.Services
         /// Virtual game board
         /// </summary>
         public char[,] Board { get; set; }
-        public GameHistoryBL GameHistoryBl { set; }
+        public GameHistory GameHistory { set; }
         /// <summary>
         /// Calculate next move
         /// </summary>
-        CheckStateBL MakeNextMove(bool isExternalBot);
+        CheckState MakeNextMove(bool isExternalBot);
         /// <summary>
         /// Save bots move in base
         /// </summary>

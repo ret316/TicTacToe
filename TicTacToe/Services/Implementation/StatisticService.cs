@@ -3,37 +3,38 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using TicTacToe.BL.Services;
+using TicTacToe.BusinessComponent.Services;
 using TicTacToe.WebApi.Models;
 
 namespace TicTacToe.WebApi.Services.Implementation
 {
     public class StatisticService : IStatisticService
     {
-        private readonly IStatisticServiceBL _statisticServiceBL;
+        private readonly BusinessComponent.Services.IStatisticService _statisticService;
         private readonly IMapper _mapper;
-        public StatisticService(IStatisticServiceBL statisticServiceBL, IMapper mapper)
+
+        public StatisticService(BusinessComponent.Services.IStatisticService statisticService, IMapper mapper)
         {
-            this._statisticServiceBL = statisticServiceBL;
+            this._statisticService = statisticService;
             this._mapper = mapper;
         }
 
-        public async Task<IEnumerable<GameResultModel>> GetAllUserGamesAsync(Guid id)
+        public async Task<IEnumerable<GameResult>> GetAllUserGamesAsync(Guid id)
         {
-            var results = await _statisticServiceBL.GetAllUserGamesAsync(id);
-            return results.Select(r => _mapper.Map<GameResultModel>(r));
+            var results = await _statisticService.GetAllUserGamesAsync(id);
+            return results.Select(r => _mapper.Map<GameResult>(r));
         }
 
-        public async Task<IEnumerable<GameHistoryModel>> GetGameHistoryAsync(Guid id)
+        public async Task<IEnumerable<GameHistory>> GetGameHistoryAsync(Guid id)
         {
-            var results = await _statisticServiceBL.GetGameHistoryAsync(id);
-            return results.Select(r => _mapper.Map<GameHistoryModel>(r));
+            var results = await _statisticService.GetGameHistoryAsync(id);
+            return results.Select(r => _mapper.Map<GameHistory>(r));
         }
 
-        public async Task<IEnumerable<UserGamesStatisticModel>> GetTop10PlayersAsync()
+        public async Task<IEnumerable<UserGamesStatistic>> GetTop10PlayersAsync()
         {
-            var results = await _statisticServiceBL.GetTop10PlayersAsync();
-            return results.Select(x => _mapper.Map<UserGamesStatisticModel>(x));
+            var results = await _statisticService.GetTop10PlayersAsync();
+            return results.Select(x => _mapper.Map<UserGamesStatistic>(x));
         }
     }
 }

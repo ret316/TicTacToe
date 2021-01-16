@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using TicTacToe.BL.Models;
+using TicTacToe.BusinessComponent.Models;
 
 namespace TicTacToe.Tests.TestData.FieldCheck
 {
@@ -13,7 +13,7 @@ namespace TicTacToe.Tests.TestData.FieldCheck
         private static Guid PlayerId1 = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc11");
         private static Guid PlayerId2 = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc12");
 
-        GameHistoryBL bh0 = new GameHistoryBL
+        GameHistory bh0 = new GameHistory
         {
             PlayerId = PlayerId1,
             GameId = GameId,
@@ -23,9 +23,9 @@ namespace TicTacToe.Tests.TestData.FieldCheck
             MoveDate = DateTime.Parse("2020-10-10")
         };
 
-        IEnumerable<GameHistoryBL> bgh3 = new List<GameHistoryBL>
+        IEnumerable<GameHistory> bgh3 = new List<GameHistory>
                 {
-                    new GameHistoryBL
+                    new GameHistory
                     {
                         PlayerId = PlayerId1,
                         GameId = GameId,
@@ -34,7 +34,7 @@ namespace TicTacToe.Tests.TestData.FieldCheck
                         YAxis = 1,
                         MoveDate = DateTime.Parse("2020-10-10")
                     },
-                    new GameHistoryBL
+                    new GameHistory
                     {
                         PlayerId = PlayerId2,
                         GameId = GameId,
@@ -43,7 +43,7 @@ namespace TicTacToe.Tests.TestData.FieldCheck
                         YAxis = 0,
                         MoveDate = DateTime.Parse("2020-10-10")
                     },
-                    new GameHistoryBL
+                    new GameHistory
                     {
                         PlayerId = PlayerId1,
                         GameId = GameId,
@@ -52,7 +52,7 @@ namespace TicTacToe.Tests.TestData.FieldCheck
                         YAxis = 2,
                         MoveDate = DateTime.Parse("2020-10-10")
                     },
-                    new GameHistoryBL
+                    new GameHistory
                     {
                         PlayerId = PlayerId2,
                         GameId = GameId,
@@ -61,7 +61,7 @@ namespace TicTacToe.Tests.TestData.FieldCheck
                         XAxis = 0,
                         MoveDate = DateTime.Parse("2020-10-10")
                     },
-                    new GameHistoryBL
+                    new GameHistory
                     {
                         PlayerId = PlayerId1,
                         GameId = GameId,
@@ -70,7 +70,7 @@ namespace TicTacToe.Tests.TestData.FieldCheck
                         YAxis = 0,
                         MoveDate = DateTime.Parse("2020-10-10")
                     },
-                    new GameHistoryBL
+                    new GameHistory
                     {
                         PlayerId = PlayerId2,
                         GameId = GameId,
@@ -79,7 +79,7 @@ namespace TicTacToe.Tests.TestData.FieldCheck
                         YAxis = 2,
                         MoveDate = DateTime.Parse("2020-10-10")
                     },
-                    new GameHistoryBL
+                    new GameHistory
                     {
                         PlayerId = PlayerId1,
                         GameId = GameId,
@@ -88,7 +88,7 @@ namespace TicTacToe.Tests.TestData.FieldCheck
                         YAxis = 1,
                         MoveDate = DateTime.Parse("2020-10-10")
                     },
-                    new GameHistoryBL
+                    new GameHistory
                     {
                         PlayerId = PlayerId2,
                         GameId = GameId,
@@ -97,7 +97,7 @@ namespace TicTacToe.Tests.TestData.FieldCheck
                         YAxis = 1,
                         MoveDate = DateTime.Parse("2020-10-10")
                     },
-                    new GameHistoryBL
+                    new GameHistory
                     {
                         PlayerId = PlayerId1,
                         GameId = GameId,
@@ -108,9 +108,9 @@ namespace TicTacToe.Tests.TestData.FieldCheck
                     },
                 };
 
-        IEnumerable<GameHistoryBL> bgh4 = new List<GameHistoryBL>
+        IEnumerable<GameHistory> bgh4 = new List<GameHistory>
         {
-            new GameHistoryBL
+            new GameHistory
             {
                 PlayerId = PlayerId2,
                 GameId = GameId,

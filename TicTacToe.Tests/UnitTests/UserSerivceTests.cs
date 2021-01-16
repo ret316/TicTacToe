@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.Extensions.Options;
 using Moq;
-using TicTacToe.BL.Config;
-using TicTacToe.BL.Models;
-using TicTacToe.BL.Services;
-using TicTacToe.BL.Services.Implementation;
-using TicTacToe.DL.Models;
-using TicTacToe.DL.Services;
+using TicTacToe.BusinessComponent.Config;
+using TicTacToe.BusinessComponent.Models;
+using TicTacToe.BusinessComponent.Services;
+using TicTacToe.BusinessComponent.Services.Implementation;
+using TicTacToe.DataComponent.Models;
+using TicTacToe.DataComponent.Services;
 using TicTacToe.Tests.TestData.User;
 using Xunit;
 
@@ -21,7 +21,7 @@ namespace TicTacToe.Tests.UnitTests
     {
         private Guid Id = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc09");
 
-        private IUserServiceBL GetUserService(Mock<IUserServiceDL> mock)
+        private BusinessComponent.Services.IUserService GetUserService(Mock<DataComponent.Services.IUserService> mock)
         {
             var configuration = new MapperConfiguration(cfg => cfg.AddProfile(new MapperProfile()));
             IMapper mapper = new Mapper(configuration);
@@ -32,14 +32,14 @@ namespace TicTacToe.Tests.UnitTests
                     "We are the sun and the sea and the mountain. We are the children who still can believe. We have faith, we have hope, we have answers. In our heart is where we are free"
             };
             var options = Options.Create(app);
-            return new UserServiceBL(mock.Object, options, mapper);
+            return new UserService(mock.Object, options, mapper);
         }
 
         [Theory]
         [ClassData(typeof(UserTestData1))]
-        public async Task Test1_CreateUser(UserBL user0, UserBL user1, UserDL user2)
+        public async Task Test1_CreateUser(BusinessComponent.Models.User user0, BusinessComponent.Models.User user1, DataComponent.Models.User user2)
         {
-            var mock = new Mock<IUserServiceDL>();
+            var mock = new Mock<DataComponent.Services.IUserService>();
             mock.Setup(it => it.CreateUserAsync(user2)).Returns(Task.FromResult(user0));
 
             var userService = GetUserService(mock);
@@ -59,9 +59,9 @@ namespace TicTacToe.Tests.UnitTests
 
         [Theory]
         [ClassData(typeof(UserTestData2))]
-        public async Task Test2_UpdateUser(UserBL user1, UserDL user2)
+        public async Task Test2_UpdateUser(BusinessComponent.Models.User user1, DataComponent.Models.User user2)
         {
-            var mock = new Mock<IUserServiceDL>();
+            var mock = new Mock<DataComponent.Services.IUserService>();
             mock.Setup(it => it.UpdateUserAsync(user2)).Returns(Task.FromResult(user1));
 
             var userService = GetUserService(mock);
@@ -71,9 +71,9 @@ namespace TicTacToe.Tests.UnitTests
 
         [Theory]
         [ClassData(typeof(UserTestData3))]
-        public async Task Test3_DeleteUser(Guid id, UserDL user0)
+        public async Task Test3_DeleteUser(Guid id, DataComponent.Models.User user0)
         {
-            var mock = new Mock<IUserServiceDL>();
+            var mock = new Mock<DataComponent.Services.IUserService>();
             mock.Setup(it => it.DeleteUserAsync(user0)).Returns(Task.FromResult(default(object)));
 
             var userService = GetUserService(mock);
@@ -83,9 +83,9 @@ namespace TicTacToe.Tests.UnitTests
 
         [Theory]
         [ClassData(typeof(UserTestData4))]
-        public async Task Test4_GetUser(Guid id, UserDL user1)
+        public async Task Test4_GetUser(Guid id, DataComponent.Models.User user1)
         {
-            var mock = new Mock<IUserServiceDL>();
+            var mock = new Mock<DataComponent.Services.IUserService>();
             mock.Setup(it => it.GetUserAsync(Id)).Returns(Task.FromResult(user1));
 
             var userService = GetUserService(mock);
@@ -95,9 +95,9 @@ namespace TicTacToe.Tests.UnitTests
 
         [Theory]
         [ClassData(typeof(UserTestData5))]
-        public async Task Test5_GetUsers(IEnumerable<UserDL> list, IEnumerable<UserBL> list2)
+        public async Task Test5_GetUsers(IEnumerable<DataComponent.Models.User> list, IEnumerable<BusinessComponent.Models.User> list2)
         {
-            var mock = new Mock<IUserServiceDL>();
+            var mock = new Mock<DataComponent.Services.IUserService>();
             mock.Setup(it => it.GetAllUsersAsync(1, 10)).Returns(Task.FromResult(list));
 
             var userService = GetUserService(mock);

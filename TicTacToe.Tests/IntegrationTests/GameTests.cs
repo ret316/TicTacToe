@@ -15,8 +15,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Serilog;
-using TicTacToe.DL.Config;
-using TicTacToe.DL.Models;
+using TicTacToe.DataComponent.Config;
+using TicTacToe.DataComponent.Models;
 using TicTacToe.Tests.Config;
 using TicTacToe.Tests.TestDataI.Game;
 using TicTacToe.WebApi.Models;
@@ -24,97 +24,40 @@ using Xunit;
 
 namespace TicTacToe.Tests.IntegrationTests
 {
-    public class GameTests : ClientConfig, IDisposable
+    [Collection("Database collection")]
+    public class GameTests
     {
-        private static Guid Id = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc09");
-        private static Guid Id2 = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc14");
-        private static Guid GameId = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc10");
         private static Guid GameId2 = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc15");
-        private static Guid PlayerId1 = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc11");
-        private static Guid PlayerId2 = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc12");
+        private static Guid Id38 = Guid.Parse("65386E4A-F1B9-4131-928A-63ED06B9A961");
 
-        private static Guid IdA = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc20");
 
-        public GameTests()
+        private HttpClient _client;
+        private DataBaseContext _db;
+        private DatabaseFixture _databaseFixture;
+
+        public GameTests(DatabaseFixture databaseFixture)
         {
-            client = GetConfiguration();
-
-            var game1 = new GameDL
-            {
-                Id = Id,
-                GameId = GameId,
-                Player1Id = PlayerId1,
-                Player2Id = PlayerId2,
-                IsPlayer2Bot = false
-            };
-            var game2 = new GameDL
-            {
-                Id = Id2,
-                GameId = GameId2,
-                Player1Id = PlayerId1,
-                Player2Id = null,
-                IsPlayer2Bot = true
-            };
-
-            using (var db = ContextBuilder())
-            {
-                try
-                {
-                    db.Games.Add(game1);
-                    db.Games.Add(game2);
-                    db.SaveChanges();
-                }
-                catch
-                {
-
-                }
-
-                //var (hash, salt) = GetPassHash("123456");
-                //var user0 = new UserDL
-                //{
-                //    Id = Id,
-                //    Name = "Alex",
-                //    Email = "a1@ss.com",
-                //    Password = hash,
-                //    PasswordSalt = salt
-                //};
-
-                //db.Users.Add(user0);
-
-            }
-            GetToken();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        }
-
-        public void Dispose()
-        {
-            using (var db = ContextBuilder())
-            {
-                db.Database.ExecuteSqlCommand("DELETE FROM \"Games\"");
-                db.Database.ExecuteSqlCommand("DELETE FROM \"GameHistories\"");
-                db.Database.ExecuteSqlCommand("DELETE FROM \"Users\" WHERE \"Id\" != 'F403AA84-B314-4044-93C3-AD514D35EA4A'");
-            }
+            this._client = databaseFixture.client;
+            this._db = databaseFixture._context;
+            this._databaseFixture = databaseFixture;
         }
 
         [Theory]
         [ClassData(typeof(GameTestData1))]
-        public async Task Test1_CreateGame(StringContent content, GameDL gd0)
+        public async Task Test1_CreateGame(StringContent content, DataComponent.Models.Game gd0)
         {
-            var result = await client.PostAsync("api/games/create", content);
+            var result = await _client.PostAsync("api/games/create", content);
 
-            using (var db = ContextBuilder())
-            {
-                var game = await db.Games.FirstOrDefaultAsync(x =>
-                    x.Player1Id == gd0.Player1Id && x.Player2Id == gd0.Player2Id);
+            var game = await _db.Games.FirstOrDefaultAsync(x =>
+                x.Player1Id == gd0.Player1Id && x.Player2Id == gd0.Player2Id);
 
-                Assert.NotNull(game);
-            }
+            Assert.NotNull(game);
         }
 
         [Fact]
         public async Task Test2_GetGames()
         {
-            var result = await client.GetAsync("api/games/");
+            var result = await _client.GetAsync("api/games/");
 
             Assert.Equal(System.Net.HttpStatusCode.OK, result.StatusCode);
         }
@@ -123,21 +66,18 @@ namespace TicTacToe.Tests.IntegrationTests
         [ClassData(typeof(GameTestData2))]
         public async Task Test3_MakeMove(StringContent content1, StringContent content2)
         {
-            var result0 = await client.PostAsync("api/games/move", content1);
+            var result0 = await _client.PostAsync("api/games/move", content1);
 
-            var result1 = await client.PostAsync("api/games/move", content2);
+            var result1 = await _client.PostAsync("api/games/move", content2);
 
             Assert.True(System.Net.HttpStatusCode.OK == result0.StatusCode);
             Assert.True(System.Net.HttpStatusCode.OK == result1.StatusCode);
 
-            using (var db = ContextBuilder())
-            {
-                var r1 = await db.GameHistories.Where(x => x.GameId == GameId).ToListAsync();
-                var r2 = await db.GameHistories.Where(x => x.GameId == GameId2).ToListAsync();
+            var r1 = await _db.GameHistories.Where(x => x.GameId == Id38).ToListAsync();
+            var r2 = await _db.GameHistories.Where(x => x.GameId == GameId2).ToListAsync();
 
-                Assert.True(r1.Count() == 1);
-                Assert.True(r2.Count() == 2);
-            }
+            Assert.True(r1.Count() == 1);
+            Assert.True(r2.Count() == 2);
         }
 
         [Theory]
@@ -148,7 +88,7 @@ namespace TicTacToe.Tests.IntegrationTests
             foreach (var item in content)
             {
                 Thread.Sleep(1000);
-                var res = await client.PostAsync("api/games/move", item);
+                var res = await _client.PostAsync("api/games/move", item);
                 result = res;
                 Assert.Equal(System.Net.HttpStatusCode.OK, res.StatusCode);
             }

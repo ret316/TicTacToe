@@ -3,81 +3,82 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TicTacToe.BL.Models;
-using TicTacToe.BL.Services;
-using TicTacToe.DL.Models;
+using TicTacToe.BusinessComponent.Enum;
+using TicTacToe.BusinessComponent.Models;
+using TicTacToe.BusinessComponent.Services;
+using TicTacToe.DataComponent.Models;
 
-namespace TicTacToe.BL.Helpers
+namespace TicTacToe.BusinessComponent.Helpers
 {
     public class WinHelper
     {
-        private GameBL game;
-        private char[,] board;
-        private readonly IStatisticServiceBL _statisticServiceBL;
+        private Models.Game _game;
+        private char[,] _board;
+        private readonly IStatisticService _statisticService;
 
-        public GameBL Game
+        public Models.Game Game
         {
-            set => game = value;
+            set => _game = value;
         }
 
         public char[,] Board
         {
-            set => board = value;
+            set => _board = value;
         }
 
-        public WinHelper(IStatisticServiceBL statisticServiceBL)
+        public WinHelper(IStatisticService statisticService)
         {
-            this._statisticServiceBL = statisticServiceBL;
+            this._statisticService = statisticService;
         }
 
         public async Task FindWinnerAndLoser()
         {
             var res = GetWinner();
 
-            if (!game.IsPlayer2Bot)
+            if (!_game.IsPlayer2Bot)
             {
-                await SaveGameResult(new GameResultBL
+                await SaveGameResult(new Models.GameResult
                 {
                     Id = Guid.NewGuid(),
-                    GameId = game.GameId.Value,
+                    GameId = _game.GameId.Value,
                     PlayerId = res.winner,
-                    Result = Models.ResultStatus.Won
+                    Result = ResultStatus.Won
                 });
 
-                await SaveGameResult(new GameResultBL
+                await SaveGameResult(new Models.GameResult
                 {
                     Id = Guid.NewGuid(),
-                    GameId = game.GameId.Value,
+                    GameId = _game.GameId.Value,
                     PlayerId = res.loser,
-                    Result = Models.ResultStatus.Lost
+                    Result = ResultStatus.Lost
                 });
             }
             else
             {
-                await SaveGameResult(new GameResultBL
+                await SaveGameResult(new Models.GameResult
                 {
                     Id = Guid.NewGuid(),
-                    GameId = game.GameId.Value,
-                    PlayerId = game.Player1Id,
-                    Result = res.winner == game.Player1Id ? Models.ResultStatus.Won : Models.ResultStatus.Lost
+                    GameId = _game.GameId.Value,
+                    PlayerId = _game.Player1Id,
+                    Result = res.winner == _game.Player1Id ? ResultStatus.Won : ResultStatus.Lost
                 });
             }
         }
 
         private (Guid winner, Guid loser) GetWinner()
         {
-            var list = board.Cast<char>();
+            var list = _board.Cast<char>();
             var x = list.Count(x => x == 'X');
             var y = list.Count(x => x == 'O');
-            if (!game.IsPlayer2Bot)
-                return x > y ? (game.Player1Id, game.Player2Id.Value) : (game.Player2Id.Value, game.Player1Id);
+            if (!_game.IsPlayer2Bot)
+                return x > y ? (_game.Player1Id, _game.Player2Id.Value) : (_game.Player2Id.Value, _game.Player1Id);
             else
-                return x > y ? (game.Player1Id, Guid.Empty) : (Guid.Empty, game.Player1Id);
+                return x > y ? (_game.Player1Id, Guid.Empty) : (Guid.Empty, _game.Player1Id);
         }
 
-        public async Task SaveGameResult(GameResultBL gameResult)
+        public async Task SaveGameResult(Models.GameResult gameResult)
         {
-            await _statisticServiceBL.SaveStatisticAsync(gameResult);
+            await _statisticService.SaveStatisticAsync(gameResult);
         }
     }
 }

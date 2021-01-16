@@ -63,7 +63,7 @@ namespace TicTacToe.WebApi.Controllers
         /// </summary>
         /// <param name="user">User model</param>
         /// <returns></returns>
-        [AllowAnonymous] [HttpPost] public async Task<IActionResult> CreateUserAsync([FromBody] UserModel user)
+        [AllowAnonymous] [HttpPost] public async Task<IActionResult> CreateUserAsync([FromBody] User user)
         {
             var result = await _userService.CreateUserAsync(user);
 
@@ -81,9 +81,9 @@ namespace TicTacToe.WebApi.Controllers
         /// <param name="id">User id</param>
         /// <param name="user">New user model</param>
         /// <returns></returns>
-        [HttpPut("{id}")] public async Task<IActionResult> UpdateUserAsync(Guid id, [FromBody] UserModel user)
+        [HttpPut("{id}")] public async Task<IActionResult> UpdateUserAsync(Guid id, [FromBody] User user)
         {
-            var result = await _userService.UpdateUserAsync(new UserModel
+            var result = await _userService.UpdateUserAsync(new User
             {
                 Id = id,
                 Name = user.Name,
@@ -123,7 +123,7 @@ namespace TicTacToe.WebApi.Controllers
         /// </summary>
         /// <param name="model">User authentication model</param>
         /// <returns></returns>
-        [AllowAnonymous] [HttpPost("authenticate")] public async Task<IActionResult> Authenticate([FromBody] UserAuthModel model)
+        [AllowAnonymous] [HttpPost("authenticate")] public async Task<IActionResult> Authenticate([FromBody] UserAuth model)
         {
             var user = await _userService.Authenticate(model);
             if (user is null)

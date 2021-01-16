@@ -28,7 +28,7 @@ namespace TicTacToe.WebApi.Controllers
         /// </summary>
         /// <param name="gameModel">Game model for creation</param>
         /// <returns></returns>
-        [HttpPost("create")] public async Task<IActionResult> CreateGame([FromBody] GameModel gameModel)
+        [HttpPost("create")] public async Task<IActionResult> CreateGame([FromBody] Game gameModel)
         {
             var result = await _gameService.CreateGameAsync(gameModel);
 
@@ -46,7 +46,7 @@ namespace TicTacToe.WebApi.Controllers
         /// </summary>
         /// <param name="gameModel">Game position</param>
         /// <returns></returns>
-        [HttpPost("move")] public async Task<IActionResult> PlayerMove([FromBody] GameHistoryModel gameModel)
+        [HttpPost("move")] public async Task<IActionResult> PlayerMove([FromBody] GameHistory gameModel)
         {
             var result = await _gameService.SavePlayerMoveAsync(gameModel);
 

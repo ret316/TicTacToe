@@ -17,12 +17,12 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using TicTacToe.BL.Extensions;
-using TicTacToe.DL.Extensions;
-using TicTacToe.DL.Config;
+using TicTacToe.BusinessComponent.Extensions;
+using TicTacToe.DataComponent.Extensions;
+using TicTacToe.DataComponent.Config;
 using TicTacToe.WebApi.Services;
 using TicTacToe.WebApi.Services.Implementation;
-using TicTacToe.BL.Config;
+using TicTacToe.BusinessComponent.Config;
 
 namespace TicTacToe
 {

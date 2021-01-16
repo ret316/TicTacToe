@@ -3,33 +3,33 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TicTacToe.BL.Enum;
-using TicTacToe.BL.Models;
-using TicTacToe.DL.Models;
-using TicTacToe.DL.Services;
+using TicTacToe.BusinessComponent.Models;
+using TicTacToe.BusinessComponent.Enum;
+using TicTacToe.DataComponent.Models;
+using TicTacToe.DataComponent.Services;
 
-namespace TicTacToe.BL.Services.Implementation
+namespace TicTacToe.BusinessComponent.Services.Implementation
 {
     public class BotService : IBotService
     {
         private readonly IFieldChecker _fieldChecker;
-        private IGameServiceDL _gameServiceDL;
-        private readonly IStatisticServiceBL _statisticServiceBL;
+        private readonly DataComponent.Services.IGameService _gameService;
+        private readonly IStatisticService _statisticService;
         public char[,] Board { get; set; }
-        private GameHistoryBL _gameHistory;
+        private Models.GameHistory _gameHistory;
 
-        public BotService(IFieldChecker fieldChecker, IGameServiceDL gameServiceDL)
+        public BotService(IFieldChecker fieldChecker, DataComponent.Services.IGameService gameService)
         {
             this._fieldChecker = fieldChecker;
-            this._gameServiceDL = gameServiceDL;
+            this._gameService = gameService;
         }
 
-        public GameHistoryBL GameHistoryBl
+        public Models.GameHistory GameHistory
         {
             set => _gameHistory = value;
         }
 
-        public CheckStateBL MakeNextMove(bool isExternalBot)
+        public CheckState MakeNextMove(bool isExternalBot)
         {
             Random rnd = new Random();
             int xAxis; int yAxis;
@@ -58,20 +58,20 @@ namespace TicTacToe.BL.Services.Implementation
 
             if (_fieldChecker.LinesCheck())
             {
-                return CheckStateBL.BotWonCheck;
+                return CheckState.BotWonCheck;
             }
 
             if (_fieldChecker.DCheck())
             {
-                return CheckStateBL.BotWonCheck;
+                return CheckState.BotWonCheck;
             }
 
-            return CheckStateBL.None;
+            return CheckState.None;
         }
 
         public void SaveBotMove(int x, int y)
         {
-            _gameServiceDL.SavePlayerMoveAsync(new GameHistoryDL
+            _gameService.SavePlayerMoveAsync(new DataComponent.Models.GameHistory
             {
                 GameId = _gameHistory.GameId,
                 PlayerId = null,

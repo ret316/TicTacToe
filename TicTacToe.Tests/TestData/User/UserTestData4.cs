@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using TicTacToe.DL.Models;
+using TicTacToe.DataComponent.Models;
 
 namespace TicTacToe.Tests.TestData.User
 {
@@ -10,7 +10,7 @@ namespace TicTacToe.Tests.TestData.User
     {
         private static Guid Id = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc09");
 
-        UserDL user0 = new UserDL { Id = Id, Name = "Bradley", Email = "b@gmail.com" };
+        DataComponent.Models.User user0 = new DataComponent.Models.User { Id = Id, Name = "Bradley", Email = "b@gmail.com" };
 
         public IEnumerator<object[]> GetEnumerator()
         {

@@ -6,16 +6,17 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using TicTacToe.BL.Services;
-using TicTacToe.BL.Services.Implementation;
+using TicTacToe.BusinessComponent.Config;
+using TicTacToe.BusinessComponent.Services;
+using TicTacToe.BusinessComponent.Services.Implementation;
 
-namespace TicTacToe.BL.Extensions
+namespace TicTacToe.BusinessComponent.Extensions
 {
     public static class BusinessLayerCollectionExtention
     {
         public static IServiceCollection AddBusinessLayerCollection(this IServiceCollection services, byte[] key)
         {
-            services.AddAutoMapper(typeof(TicTacToe.BL.Config.MapperProfile).Assembly);
+            services.AddAutoMapper(typeof(MapperProfile).Assembly);
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -27,7 +28,7 @@ namespace TicTacToe.BL.Extensions
                     {
                         OnTokenValidated = context =>
                         {
-                            var userService = context.HttpContext.RequestServices.GetRequiredService<IUserServiceBL>();
+                            var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
                             var userId = Guid.Parse(context.Principal.Identity.Name);
                             var user = userService.GetUserAsync(userId).Result;
                             if (user == null)
@@ -47,10 +48,10 @@ namespace TicTacToe.BL.Extensions
                         ValidateAudience = false
                     };
                 });
-            services.AddScoped<IUserServiceBL, UserServiceBL>();
-            services.AddScoped<IGameServiceBL, GameServiceBL>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IGameService, GameService>();
             services.AddScoped<IFieldChecker, FIeldChecker>();
-            services.AddScoped<IStatisticServiceBL, StatisticServiceBL>();
+            services.AddScoped<IStatisticService, StatisticService>();
             services.AddScoped<IBotService, BotService>();
             return services;
         }

@@ -2,8 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using TicTacToe.BL.Models;
-using TicTacToe.DL.Models;
+using TicTacToe.BusinessComponent.Enum;
+using TicTacToe.BusinessComponent.Models;
+using TicTacToe.DataComponent.Models;
 
 namespace TicTacToe.Tests.TestData.Game
 {
@@ -15,9 +16,9 @@ namespace TicTacToe.Tests.TestData.Game
         private static Guid PlayerId2 = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc12");
         private static DateTime date = DateTime.Parse("2020-10-10");
 
-        private IEnumerable<GameHistoryDL> gde1 = new List<GameHistoryDL>();
+        private IEnumerable<DataComponent.Models.GameHistory> gde1 = new List<DataComponent.Models.GameHistory>();
 
-        GameDL gd0 = new GameDL
+        DataComponent.Models.Game gd0 = new DataComponent.Models.Game
         {
             Id = Id,
             GameId = GameId,
@@ -27,7 +28,7 @@ namespace TicTacToe.Tests.TestData.Game
             IsGameFinished = false
         };
 
-        static GameHistoryDL ghd0 = new GameHistoryDL
+        static DataComponent.Models.GameHistory ghd0 = new DataComponent.Models.GameHistory
         {
             Id = Id,
             GameId = GameId,
@@ -37,15 +38,15 @@ namespace TicTacToe.Tests.TestData.Game
             YAxis = 1,
             MoveDate = date
         };
-        GameResultBL grb0 = new GameResultBL
+        BusinessComponent.Models.GameResult grb0 = new BusinessComponent.Models.GameResult
         {
             Id = Id,
             GameId = GameId,
             PlayerId = PlayerId1,
-            Result = BL.Models.ResultStatus.Draw
+            Result = ResultStatus.Draw
         };
 
-        GameHistoryBL ghb0 = new GameHistoryBL
+        BusinessComponent.Models.GameHistory ghb0 = new BusinessComponent.Models.GameHistory
         {
             GameId = GameId,
             PlayerId = PlayerId1,

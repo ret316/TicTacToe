@@ -12,95 +12,63 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using TicTacToe.DL.Config;
+using TicTacToe.DataComponent.Config;
 using TicTacToe.WebApi.Models;
 using Xunit;
 using System.Linq;
 using System.Net.Http.Headers;
 using Serilog;
-using TicTacToe.DL.Models;
+using TicTacToe.DataComponent.Models;
 using TicTacToe.Tests.Config;
 using TicTacToe.Tests.TestDataI.User;
 
 namespace TicTacToe.Tests.IntegrationTests
 {
-    public class UserTests : ClientConfig, IDisposable
+    [Collection("Database collection")]
+    public class UserTests
     {
+        private static Guid Id1 = Guid.Parse("EAC9A1A1-CD29-43E0-AB07-D381615F9993");
+        private static Guid Id2 = Guid.Parse("EF466876-2572-4A18-8F83-B5174E57FABA");
 
-        private static Guid Id = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc09");
-        private static Guid IdA = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc40");
+        private HttpClient _client;
+        private DataBaseContext _db;
+        private DatabaseFixture _databaseFixture;
 
-        public UserTests()
+        public UserTests(DatabaseFixture databaseFixture)
         {
-            client = GetConfiguration();
-
-            using (var db = ContextBuilder())
-            {
-                var (hash, salt) = GetPassHash("123456");
-                var user0 = new UserDL
-                {
-                    Id = IdA,
-                    Name = "Alex",
-                    Email = "a1@ss.com",
-                    Password = hash,
-                    PasswordSalt = salt
-                };
-
-                try
-                {
-                    db.Users.Add(user0);
-                    db.SaveChanges();
-                }
-                catch
-                {
-
-                }
-
-            }
-
-            GetToken();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        }
-
-        public void Dispose()
-        {
-            using (var db = ContextBuilder())
-            {
-                db.Database.ExecuteSqlCommand("DELETE FROM \"Users\" WHERE \"Id\" != 'F403AA84-B314-4044-93C3-AD514D35EA4A'");
-            }
+            this._client = databaseFixture.client;
+            this._db = databaseFixture._context;
+            this._databaseFixture = databaseFixture;
         }
 
         [Fact]
         public async Task GetUsers()
         {
-            var result = await client.GetAsync("api/users?pageNumber=1&pageSize=10");
+            var result = await _client.GetAsync("api/users?pageNumber=1&pageSize=10");
 
             var json = await result.Content.ReadAsStringAsync();
-            var r1 = JsonConvert.DeserializeObject<IEnumerable<UserModel>>(json);
+            var r1 = JsonConvert.DeserializeObject<IEnumerable<WebApi.Models.User>>(json);
 
             Assert.True(result.StatusCode == System.Net.HttpStatusCode.OK);
         }
 
         [Theory]
         [ClassData(typeof(UserTestData1))]
-        public async Task AddUser(UserModel user, StringContent content)
+        public async Task AddUser(WebApi.Models.User user, StringContent content)
         {
-            var resp = await client.PostAsync("api/users", content);
+            var resp = await _client.PostAsync("api/users", content);
 
-            await using (var db = ContextBuilder())
-            {
-                var us = await db.Users.FirstOrDefaultAsync(x => x.Name == user.Name && x.Email == user.Email);
-                Assert.True(user.Name == us.Name && user.Email == us.Email);
-            }
+            var us = await _db.Users.FirstOrDefaultAsync(x => x.Name == user.Name && x.Email == user.Email);
+            Assert.True(user.Name == us.Name && user.Email == us.Email);
         }
 
-        private (UserModel, StringContent) GetContent()
+        private (WebApi.Models.User, StringContent) GetContent()
         {
-            var user = new UserModel
+            var user = new WebApi.Models.User
             {
                 Id = null,
                 Name = "Alexey",
-                Email = "a@ss.com",
+                Email = "a25@ss.com",
                 Password = "123456"
             };
             var json = JsonConvert.SerializeObject(user);
@@ -114,10 +82,11 @@ namespace TicTacToe.Tests.IntegrationTests
         {
             var (user, content) = GetContent();
 
-            var resp = await client.PutAsync($"api/users/{IdA}", content);
-            await using (var db = ContextBuilder())
+            var resp = await _client.PutAsync($"api/users/{Id1}", content);
+            //var us1 = await _db.Users.FirstOrDefaultAsync(x => x.Id == Id1);
+            using (var db = _databaseFixture.ContextBuilder())
             {
-                var us1 = await db.Users.FirstOrDefaultAsync(x => x.Email == user.Email);
+                var us1 = await db.Users.FirstOrDefaultAsync(x => x.Id == Id1);
                 Assert.True(user.Name == us1.Name && user.Email == us1.Email);
             }
         }
@@ -125,12 +94,9 @@ namespace TicTacToe.Tests.IntegrationTests
         [Fact]
         public async Task DeleteUser()
         {
-            var res = await client.DeleteAsync($"api/users/{IdA}");
-            await using (var db = ContextBuilder())
-            {
-                var user = await db.Users.FirstOrDefaultAsync(x => x.Id == Id);
-                Assert.Null(user);
-            }
+            var res = await _client.DeleteAsync($"api/users/{Id2}");
+            var user = await _db.Users.FirstOrDefaultAsync(x => x.Id == Id2);
+            Assert.Null(user);
         }
     }
 }

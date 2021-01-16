@@ -10,11 +10,11 @@ namespace TicTacToe.Tests.TestDataI.User
 {
     public class UserTestData1 : IEnumerable<object[]>
     {
-        UserModel user = new UserModel
+        WebApi.Models.User user = new WebApi.Models.User
         {
             Id = null,
-            Name = "Alex",
-            Email = "a@ss.com",
+            Name = "AlexD",
+            Email = "a12@ss.com",
             Password = "123456"
         };
 

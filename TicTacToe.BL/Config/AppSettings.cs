@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TicTacToe.BL.Config
+namespace TicTacToe.BusinessComponent.Config
 {
     public class AppSettings
     {

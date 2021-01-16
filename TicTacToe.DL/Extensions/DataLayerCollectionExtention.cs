@@ -4,11 +4,11 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TicTacToe.DL.Config;
-using TicTacToe.DL.Services;
-using TicTacToe.DL.Services.Implementation;
+using TicTacToe.DataComponent.Config;
+using TicTacToe.DataComponent.Services;
+using TicTacToe.DataComponent.Services.Implementation;
 
-namespace TicTacToe.DL.Extensions
+namespace TicTacToe.DataComponent.Extensions
 {
     public static class DataLayerCollectionExtention
     {
@@ -20,9 +20,9 @@ namespace TicTacToe.DL.Extensions
                 options.EnableDetailedErrors();
                 options.EnableSensitiveDataLogging();
             });
-            services.AddScoped<IUserServiceDL, UserServiceDL>();
-            services.AddScoped<IGameServiceDL, GameServiceDL>();
-            services.AddScoped<IStatisticServiceDL, StatisticServiceDL>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IGameService, GameService>();
+            services.AddScoped<IStatisticService, StatisticService>();
             return services;
         }
     }

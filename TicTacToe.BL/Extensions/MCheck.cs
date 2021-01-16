@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TicTacToe.BL.Extensions
+namespace TicTacToe.BusinessComponent.Extensions
 {
     public static class MCheck
     {

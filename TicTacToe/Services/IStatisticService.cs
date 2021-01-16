@@ -13,17 +13,17 @@ namespace TicTacToe.WebApi.Services
         /// </summary>
         /// <param name="id">User id</param>
         /// <returns>Collection of game results</returns>
-        Task<IEnumerable<GameResultModel>> GetAllUserGamesAsync(Guid id);
+        Task<IEnumerable<GameResult>> GetAllUserGamesAsync(Guid id);
         /// <summary>
         /// Method for getting game history that contains all moves
         /// </summary>
         /// <param name="id">Game id</param>
         /// <returns>Collection of game movements</returns>
-        Task<IEnumerable<GameHistoryModel>> GetGameHistoryAsync(Guid id);
+        Task<IEnumerable<GameHistory>> GetGameHistoryAsync(Guid id);
         /// <summary>
         /// Method for getting top 10 best players
         /// </summary>
         /// <returns>Collection of players</returns>
-        Task<IEnumerable<UserGamesStatisticModel>> GetTop10PlayersAsync();
+        Task<IEnumerable<UserGamesStatistic>> GetTop10PlayersAsync();
     }
 }

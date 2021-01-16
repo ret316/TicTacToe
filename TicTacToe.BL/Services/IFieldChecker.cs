@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using TicTacToe.BL.Enum;
-using TicTacToe.BL.Models;
-using TicTacToe.DL.Models;
+using TicTacToe.BusinessComponent.Enum;
+using TicTacToe.BusinessComponent.Models;
+using TicTacToe.DataComponent.Models;
 
-namespace TicTacToe.BL.Services
+namespace TicTacToe.BusinessComponent.Services
 {
     /// <summary>
     /// Interface of field check service
@@ -20,12 +20,12 @@ namespace TicTacToe.BL.Services
         /// Virtual board
         /// </summary>
         public char[,] Board { get; set; }
-        public GameHistoryBL NextMove{ set; }
+        public Models.GameHistory NextMove{ set; }
         /// <summary>
         /// Initialization of game board
         /// </summary>
         /// <param name="gameHistories">Game chronology</param>
-        void BoardInit(IEnumerable<GameHistoryBL> gameHistories);
+        void BoardInit(IEnumerable<Models.GameHistory> gameHistories);
 
         /// <summary>
         /// Set next move on board
@@ -67,6 +67,6 @@ namespace TicTacToe.BL.Services
         /// </summary>
         /// <param name="game">Game details</param>
         /// <returns></returns>
-        bool GamePlayerCheck(GameBL game);
+        bool GamePlayerCheck(Models.Game game);
     }
 }

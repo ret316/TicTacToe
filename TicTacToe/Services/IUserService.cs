@@ -18,25 +18,25 @@ namespace TicTacToe.WebApi.Services
         /// <param name="pageNumber">Selected page number</param>
         /// <param name="pageSize">Number of objects in pagination</param>
         /// <returns>Collection of user models</returns>
-        Task<IEnumerable<UserModel>> GetAllUsersAsync(int pageNumber, int pageSize);
+        Task<IEnumerable<User>> GetAllUsersAsync(int pageNumber, int pageSize);
         /// <summary>
         /// Method for getting user details
         /// </summary>
         /// <param name="id">User id</param>
         /// <returns>User model</returns>
-        Task<UserModel> GetUserAsync(Guid id);
+        Task<User> GetUserAsync(Guid id);
         /// <summary>
         /// Method for saving user in database
         /// </summary>
         /// <param name="user">User model</param>
         /// <returns></returns>
-        Task<bool> CreateUserAsync(UserModel user);
+        Task<bool> CreateUserAsync(User user);
         /// <summary>
         /// Method for updating user in database
         /// </summary>
         /// <param name="user">User model</param>
         /// <returns></returns>
-        Task<bool> UpdateUserAsync(UserModel user);
+        Task<bool> UpdateUserAsync(User user);
         /// <summary>
         /// Method for deletion user from database
         /// </summary>

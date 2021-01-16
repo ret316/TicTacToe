@@ -2,8 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using TicTacToe.BL.Models;
-using TicTacToe.DL.Models;
+using TicTacToe.BusinessComponent.Models;
+using TicTacToe.DataComponent.Models;
 
 namespace TicTacToe.Tests.TestData.Game
 {
@@ -15,7 +15,7 @@ namespace TicTacToe.Tests.TestData.Game
         private static Guid PlayerId2 = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc12");
         private static DateTime date = DateTime.Parse("2020-10-10");
 
-        static GameDL gd0 = new GameDL
+        static DataComponent.Models.Game gd0 = new DataComponent.Models.Game
         {
             Id = Id,
             GameId = GameId,
@@ -25,14 +25,14 @@ namespace TicTacToe.Tests.TestData.Game
             IsGameFinished = false
         };
 
-        IEnumerable<GameDL> gdh0 = new List<GameDL>
+        IEnumerable<DataComponent.Models.Game> gdh0 = new List<DataComponent.Models.Game>
         {
             gd0
         };
 
-        IEnumerable<GameBL> gbh0 = new List<GameBL>
+        IEnumerable<BusinessComponent.Models.Game> gbh0 = new List<BusinessComponent.Models.Game>
         {
-            new GameBL
+            new BusinessComponent.Models.Game
             {
                 Id = Id,
                 GameId = GameId,

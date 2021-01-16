@@ -46,6 +46,10 @@ namespace TicTacToe.WebApi.Enum
         /// <summary>
         /// Player lost
         /// </summary>
-        [Description("Player lost")]BotWonCheck = 128
+        [Description("Player lost")] BotWonCheck = 128,
+        /// <summary>
+        /// There is no game with this id
+        /// </summary>
+        [Description("Game not exists")] GameNotExist = 256
     }
 }

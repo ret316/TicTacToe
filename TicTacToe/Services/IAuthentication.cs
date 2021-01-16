@@ -13,6 +13,6 @@ namespace TicTacToe.WebApi.Services
         /// </summary>
         /// <param name="user">User authentication model</param>
         /// <returns>Authentication model</returns>
-        Task<AuthUserModel> Authenticate(UserAuthModel user);
+        Task<AuthUser> Authenticate(UserAuth user);
     }
 }

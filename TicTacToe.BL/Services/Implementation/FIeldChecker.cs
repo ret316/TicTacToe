@@ -2,36 +2,35 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using TicTacToe.BL.Enum;
-using TicTacToe.BL.Models;
-using TicTacToe.DL.Models;
-using TicTacToe.BL.Extensions;
+using TicTacToe.BusinessComponent.Enum;
+using TicTacToe.BusinessComponent.Models;
+using TicTacToe.DataComponent.Models;
+using TicTacToe.BusinessComponent.Extensions;
 
-namespace TicTacToe.BL.Services.Implementation
+namespace TicTacToe.BusinessComponent.Services.Implementation
 {
     public class FIeldChecker : IFieldChecker
     {
-        private IEnumerable<GameHistoryBL> _gameHistory;
-        private GameHistoryBL _nextMove;
-        private Guid? firstPlayerId;
-
+        private IEnumerable<Models.GameHistory> _gameHistory;
+        private Models.GameHistory _nextMove;
+        private Guid? _firstPlayerId;
         public char[,] Board { get; set; }
-        public GameHistoryBL NextMove
+        public Models.GameHistory NextMove
         {
             set => _nextMove = value;
         }
 
-        public void BoardInit(IEnumerable<GameHistoryBL> gameHistories)
+        public void BoardInit(IEnumerable<Models.GameHistory> gameHistories)
         {
             this._gameHistory = gameHistories;
             Board = new char[IFieldChecker.BOARD_SIZE, IFieldChecker.BOARD_SIZE];
 
             if (_gameHistory.Any())
             {
-                firstPlayerId = gameHistories.First().PlayerId;
+                _firstPlayerId = gameHistories.First().PlayerId;
                 foreach (var item in gameHistories)
                 {
-                    if (item.PlayerId == firstPlayerId)
+                    if (item.PlayerId == _firstPlayerId)
                     {
                         Board[item.YAxis, item.XAxis] = 'X';
                     }
@@ -78,9 +77,9 @@ namespace TicTacToe.BL.Services.Implementation
 
         public void MakeMove()
         {
-            if (firstPlayerId.HasValue)
+            if (_firstPlayerId.HasValue)
             {
-                Board[_nextMove.YAxis, _nextMove.XAxis] = firstPlayerId.Value == _nextMove.PlayerId ? 'X' : 'O';
+                Board[_nextMove.YAxis, _nextMove.XAxis] = _firstPlayerId.Value == _nextMove.PlayerId ? 'X' : 'O';
             }
             else
             {
@@ -110,14 +109,18 @@ namespace TicTacToe.BL.Services.Implementation
             return false;
         }
 
-        public bool GamePlayerCheck(GameBL game)
+        public bool GamePlayerCheck(Models.Game game)
         {
             if (_nextMove.IsBot)
             {
                 return !game.IsPlayer2Bot;
             }
 
-            return _nextMove.PlayerId != game.Player1Id && _nextMove.PlayerId != game.Player2Id.Value;
+            if (game.Player2Id.HasValue)
+            {
+                return _nextMove.PlayerId != game.Player1Id && _nextMove.PlayerId != game.Player2Id.Value;
+            }
+            return _nextMove.PlayerId != game.Player1Id;
         }
     }
 }

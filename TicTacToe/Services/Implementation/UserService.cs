@@ -3,41 +3,42 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using TicTacToe.BL.Models;
-using TicTacToe.BL.Services;
+using TicTacToe.BusinessComponent.Models;
+using TicTacToe.BusinessComponent.Services;
 using TicTacToe.WebApi.Models;
 
 namespace TicTacToe.WebApi.Services.Implementation
 {
     public class UserService : IUserService
     {
-        private readonly IUserServiceBL _userServiceBL;
+        private readonly BusinessComponent.Services.IUserService _userService;
         private readonly IMapper _mapper;
-        public UserService(IUserServiceBL userServiceBL, IMapper mapper)
+
+        public UserService(BusinessComponent.Services.IUserService userService, IMapper mapper)
         {
-            this._userServiceBL = userServiceBL;
+            this._userService = userService;
             this._mapper = mapper;
         }
 
-        public async Task<IEnumerable<UserModel>> GetAllUsersAsync(int pageNumber, int pageSize)
+        public async Task<IEnumerable<Models.User>> GetAllUsersAsync(int pageNumber, int pageSize)
         {
-            var users = await _userServiceBL.GetAllUsersAsync(pageNumber, pageSize);
+            var users = await _userService.GetAllUsersAsync(pageNumber, pageSize);
 
-            return users.Select(u => _mapper.Map<UserModel>(u));
+            return users.Select(u => _mapper.Map<Models.User>(u));
         }
 
-        public async Task<UserModel> GetUserAsync(Guid id)
+        public async Task<Models.User> GetUserAsync(Guid id)
         {
-            var user = await _userServiceBL.GetUserAsync(id);
+            var user = await _userService.GetUserAsync(id);
 
-            return _mapper.Map<UserModel>(user);
+            return _mapper.Map<Models.User>(user);
         }
 
-        public async Task<bool> CreateUserAsync(UserModel user)
+        public async Task<bool> CreateUserAsync(Models.User user)
         {
             try
             {
-                await _userServiceBL.CreateUserAsync(_mapper.Map<UserBL>(user));
+                await _userService.CreateUserAsync(_mapper.Map<BusinessComponent.Models.User>(user));
                 return true;
             }
             catch (Exception ex)
@@ -46,11 +47,11 @@ namespace TicTacToe.WebApi.Services.Implementation
             }
         }
 
-        public async Task<bool> UpdateUserAsync(UserModel user)
+        public async Task<bool> UpdateUserAsync(Models.User user)
         {
             try
             {
-                await _userServiceBL.UpdateUserAsync(_mapper.Map<UserBL>(user));
+                await _userService.UpdateUserAsync(_mapper.Map<BusinessComponent.Models.User>(user));
                 return true;
             }
             catch (Exception ex)
@@ -63,7 +64,7 @@ namespace TicTacToe.WebApi.Services.Implementation
         {
             try
             {
-                await _userServiceBL.DeleteUserAsync(id);
+                await _userService.DeleteUserAsync(id);
                 return true;
             }
             catch (Exception e)
@@ -72,11 +73,11 @@ namespace TicTacToe.WebApi.Services.Implementation
             }
         }
 
-        public async Task<AuthUserModel> Authenticate(UserAuthModel user)
+        public async Task<Models.AuthUser> Authenticate(UserAuth user)
         {
-            var userAuth = await _userServiceBL.Authenticate(user.Email, user.Password);
+            var userAuth = await _userService.Authenticate(user.Email, user.Password);
 
-            return _mapper.Map<AuthUserModel>(userAuth);
+            return _mapper.Map<Models.AuthUser>(userAuth);
         }
     }
 }

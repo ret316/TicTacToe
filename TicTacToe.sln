@@ -5,11 +5,11 @@ VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicTacToe.WebApi", "TicTacToe\TicTacToe.WebApi.csproj", "{BF0F50FC-5AF6-4774-8669-59BD306B8806}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicTacToe.BL", "TicTacToe.BL\TicTacToe.BL.csproj", "{52BD9709-0252-4E02-ACD0-9226E90508E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicTacToe.BusinessComponent", "TicTacToe.BL\TicTacToe.BusinessComponent.csproj", "{52BD9709-0252-4E02-ACD0-9226E90508E9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicTacToe.DL", "TicTacToe.DL\TicTacToe.DL.csproj", "{76F84BBF-8BD0-42ED-955E-5DB1EE1F1C06}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicTacToe.DataComponent", "TicTacToe.DL\TicTacToe.DataComponent.csproj", "{76F84BBF-8BD0-42ED-955E-5DB1EE1F1C06}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToe.Tests", "TicTacToe.Tests\TicTacToe.Tests.csproj", "{32551E02-161B-4FFE-8382-48854D3B1951}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicTacToe.Tests", "TicTacToe.Tests\TicTacToe.Tests.csproj", "{32551E02-161B-4FFE-8382-48854D3B1951}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

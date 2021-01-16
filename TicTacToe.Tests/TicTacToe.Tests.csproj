@@ -29,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TicTacToe.BL\TicTacToe.BL.csproj" />
+    <ProjectReference Include="..\TicTacToe.BL\TicTacToe.BusinessComponent.csproj" />
     <ProjectReference Include="..\TicTacToe\TicTacToe.WebApi.csproj" />
   </ItemGroup>
 

@@ -5,32 +5,31 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Moq;
-using TicTacToe.BL.Config;
-using TicTacToe.BL.Models;
-using TicTacToe.BL.Services;
-using TicTacToe.BL.Services.Implementation;
-using TicTacToe.DL.Models;
-using TicTacToe.DL.Services;
+using TicTacToe.BusinessComponent.Config;
+using TicTacToe.BusinessComponent.Models;
+using TicTacToe.BusinessComponent.Services;
+using TicTacToe.BusinessComponent.Services.Implementation;
+using TicTacToe.DataComponent.Models;
+using TicTacToe.DataComponent.Services;
 using TicTacToe.Tests.TestData.Statistic;
 using Xunit;
-using ResultStatus = TicTacToe.DL.Models.ResultStatus;
 
 namespace TicTacToe.Tests.UnitTests
 {
     public class StatisticServiceTests
     {
-        private IStatisticServiceBL GetStatisticService(Mock<IStatisticServiceDL> mock)
+        private BusinessComponent.Services.IStatisticService GetStatisticService(Mock<DataComponent.Services.IStatisticService> mock)
         {
             var config = new MapperConfiguration(cfg => cfg.AddProfile(new MapperProfile()));
             IMapper mapper = new Mapper(config);
-            return new StatisticServiceBL(mock.Object, mapper);
+            return new StatisticService(mock.Object, mapper);
         }
 
         [Theory]
         [ClassData(typeof(StatisticTestData1))]
-        public async Task Test1_GetStatistics(Guid id, IEnumerable<GameResultDL> list1, IEnumerable<GameResultBL> list2)
+        public async Task Test1_GetStatistics(Guid id, IEnumerable<DataComponent.Models.GameResult> list1, IEnumerable<BusinessComponent.Models.GameResult> list2)
         {
-            var mock = new Mock<IStatisticServiceDL>();
+            var mock = new Mock<DataComponent.Services.IStatisticService>();
             mock.Setup(it => it.GetAllUserGamesAsync(id)).Returns(Task.FromResult(list1));
 
             var service = GetStatisticService(mock);
@@ -41,9 +40,9 @@ namespace TicTacToe.Tests.UnitTests
 
         [Theory]
         [ClassData(typeof(StatisticTestData2))]
-        public async Task Test2_GetHistory(Guid gameId, IEnumerable<GameHistoryDL> list1, IEnumerable<GameHistoryBL> list2)
+        public async Task Test2_GetHistory(Guid gameId, IEnumerable<DataComponent.Models.GameHistory> list1, IEnumerable<BusinessComponent.Models.GameHistory> list2)
         {
-            var mock = new Mock<IStatisticServiceDL>();
+            var mock = new Mock<DataComponent.Services.IStatisticService>();
             mock.Setup(it => it.GetGameHistoryAsync(gameId)).Returns(Task.FromResult(list1));
 
             var service = GetStatisticService(mock);
@@ -54,9 +53,9 @@ namespace TicTacToe.Tests.UnitTests
 
         [Theory]
         [ClassData(typeof(StatisticTestData3))]
-        public async Task Test3_SaveMove(GameResultDL res1, GameResultBL res2)
+        public async Task Test3_SaveMove(DataComponent.Models.GameResult res1, BusinessComponent.Models.GameResult res2)
         {
-            var mock = new Mock<IStatisticServiceDL>();
+            var mock = new Mock<DataComponent.Services.IStatisticService>();
             mock.Setup(it => it.SaveStatisticAsync(res1)).Returns(Task.FromResult(default(object)));
 
             var service = GetStatisticService(mock);
@@ -67,9 +66,9 @@ namespace TicTacToe.Tests.UnitTests
 
         [Theory]
         [ClassData(typeof(StatisticTestData4))]
-        public async Task Test4_Top10(IEnumerable<UserGamesStatisticBL> list1, IEnumerable<UserGamesStatisticDL> list2)
+        public async Task Test4_Top10(IEnumerable<BusinessComponent.Models.UserGamesStatistic> list1, IEnumerable<DataComponent.Models.UserGamesStatistic> list2)
         {
-            var mock = new Mock<IStatisticServiceDL>();
+            var mock = new Mock<DataComponent.Services.IStatisticService>();
             mock.Setup(it => it.GetTop10PlayersAsync()).Returns(Task.FromResult(list2));
 
             var service = GetStatisticService(mock);

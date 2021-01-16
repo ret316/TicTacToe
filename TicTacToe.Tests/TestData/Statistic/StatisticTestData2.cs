@@ -2,8 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using TicTacToe.BL.Models;
-using TicTacToe.DL.Models;
+using TicTacToe.BusinessComponent.Models;
+using TicTacToe.DataComponent.Models;
 
 namespace TicTacToe.Tests.TestData.Statistic
 {
@@ -13,9 +13,9 @@ namespace TicTacToe.Tests.TestData.Statistic
         private static Guid GameId = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc10");
         private static Guid PlayerId = Guid.Parse("4c9b3c40-374f-4b67-8c7e-19565107cc11");
 
-        IEnumerable<GameHistoryDL> list1 = new List<GameHistoryDL> 
+        IEnumerable<DataComponent.Models.GameHistory> list1 = new List<DataComponent.Models.GameHistory>
         { 
-            new GameHistoryDL
+            new DataComponent.Models.GameHistory
             {
                 Id = Id,
                 GameId = GameId,
@@ -26,9 +26,9 @@ namespace TicTacToe.Tests.TestData.Statistic
                 MoveDate = DateTime.Parse("2020-10-10")
             }
         };
-        IEnumerable<GameHistoryBL> list2 = new List<GameHistoryBL>
+        IEnumerable<BusinessComponent.Models.GameHistory> list2 = new List<BusinessComponent.Models.GameHistory>
         {
-            new GameHistoryBL
+            new BusinessComponent.Models.GameHistory
             {
                 GameId = GameId,
                 PlayerId = PlayerId,

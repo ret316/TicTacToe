@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using Newtonsoft.Json;
-using TicTacToe.DL.Models;
+using TicTacToe.DataComponent.Models;
 
 namespace TicTacToe.Tests.TestDataI.Game
 {
@@ -17,7 +17,7 @@ namespace TicTacToe.Tests.TestDataI.Game
         private static DateTime date = DateTime.Parse("2020-10-10");
 
 
-        GameDL gd0 = new GameDL
+        DataComponent.Models.Game gd0 = new DataComponent.Models.Game
         {
             GameId = GameId,
             Player1Id = PlayerId1,
