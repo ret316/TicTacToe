@@ -12,7 +12,7 @@ using TicTacToe.BusinessComponent.Services.Implementation;
 
 namespace TicTacToe.BusinessComponent.Extensions
 {
-    public static class BusinessLayerCollectionExtention
+    public static class BusinessLayerCollectionExtension
     {
         public static IServiceCollection AddBusinessLayerCollection(this IServiceCollection services, byte[] key)
         {
@@ -50,7 +50,7 @@ namespace TicTacToe.BusinessComponent.Extensions
                 });
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IGameService, GameService>();
-            services.AddScoped<IFieldChecker, FIeldChecker>();
+            services.AddScoped<IFieldChecker, FieldChecker>();
             services.AddScoped<IStatisticService, StatisticService>();
             services.AddScoped<IBotService, BotService>();
             return services;

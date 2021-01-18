@@ -9,7 +9,7 @@ using TicTacToe.BusinessComponent.Extensions;
 
 namespace TicTacToe.BusinessComponent.Services.Implementation
 {
-    public class FIeldChecker : IFieldChecker
+    public class FieldChecker : IFieldChecker
     {
         private IEnumerable<Models.GameHistory> _gameHistory;
         private Models.GameHistory _nextMove;
