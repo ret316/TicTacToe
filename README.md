@@ -21,18 +21,16 @@ test1@gmail.com/123456
 {
     "gameId": "Guid",
     "player1Id": "Guid",
-    "player2Id": null,
-    "isPlayer2Bot": true,
+    "player2Id": 11111111-1111-1111-1111-111111111111,
     "isGameFinished": false
 }
 Ход
 {
   "gameId": "Guid",
   "playerId": "Guid",
-  "isBot": false,
   "xAxis": 0,
   "yAxis": 0,
-  "moveDate": "2021-01-13T10:30:10.254Z"
+  "moveDate": null
 }
 Ход бота выполняется автоматически
 
@@ -42,17 +40,15 @@ test1@gmail.com/123456
     "gameId": "Guid",
     "player1Id": "Guid",
     "player2Id": "Guid",
-    "isPlayer2Bot": false,
     "isGameFinished": false
 }
 Ход
 {
   "gameId": "Guid",
   "playerId": "Guid",
-  "isBot": false,
   "xAxis": 0,
   "yAxis": 0,
-  "moveDate": "2021-01-13T10:30:10.254Z"
+  "moveDate": null
 }
 
 Пример отправки запроса через curl
