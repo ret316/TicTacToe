@@ -28,7 +28,7 @@ namespace TicTacToe.WebApi.Config
             CreateMap<ApiModel.GameHistory, BusinessModel.GameHistory>()
                 .ForMember(g => g.GameId, g2 => g2.MapFrom(g3 => g3.GameId))
                 .ForMember(g => g.PlayerId, g2 => g2.MapFrom(g3 => g3.PlayerId))
-                .ForMember(g => g.IsBot, g2 => g2.MapFrom(g3 => g3.IsBot))
+                //.ForMember(g => g.IsBot, g2 => g2.MapFrom(g3 => g3.IsBot))
                 .ForMember(g => g.XAxis, g2 => g2.MapFrom(g3 => g3.XAxis))
                 .ForMember(g => g.YAxis, g2 => g2.MapFrom(g3 => g3.YAxis))
                 .ForMember(g => g.MoveDate, g2 => g2.MapFrom(g3 => g3.MoveDate ?? DateTime.Now));
@@ -36,7 +36,7 @@ namespace TicTacToe.WebApi.Config
             CreateMap<BusinessModel.GameHistory, ApiModel.GameHistory>()
                 .ForMember(g => g.GameId, g2 => g2.MapFrom(g3 => g3.GameId))
                 .ForMember(g => g.PlayerId, g2 => g2.MapFrom(g3 => g3.PlayerId))
-                .ForMember(g => g.IsBot, g2 => g2.MapFrom(g3 => g3.IsBot))
+                //.ForMember(g => g.IsBot, g2 => g2.MapFrom(g3 => g3.IsBot))
                 .ForMember(g => g.XAxis, g2 => g2.MapFrom(g3 => g3.XAxis))
                 .ForMember(g => g.YAxis, g2 => g2.MapFrom(g3 => g3.YAxis))
                 .ForMember(g => g.MoveDate, g2 => g2.MapFrom(g3 => g3.MoveDate));

@@ -17,11 +17,11 @@ namespace TicTacToe.WebApi.Models
         /// <summary>
         /// Player id, if not bot move
         /// </summary>
-        public Guid? PlayerId { get; set; }
-        /// <summary>
-        /// Is player bot
-        /// </summary>
-        public bool IsBot { get; set; }
+        public Guid PlayerId { get; set; }
+        ///// <summary>
+        ///// Is player bot
+        ///// </summary>
+        //public bool IsBot { get; set; }
         /// <summary>
         /// X axis
         /// </summary>

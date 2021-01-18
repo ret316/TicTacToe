@@ -27,6 +27,14 @@ namespace TicTacToe.DataComponent.Config
                     Password = tuple.hash,
                     PasswordSalt = tuple.salt
                 });
+                Users.Add(new User
+                {
+                    Id = Guid.Parse("11111111-1111-1111-1111-111111111111"),
+                    Name = "bot1",
+                    Email = "bot1@gmail.com",
+                    Password = tuple.hash,
+                    PasswordSalt = tuple.salt
+                });
                 SaveChanges();
             }
         }

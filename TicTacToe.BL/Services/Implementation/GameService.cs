@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Newtonsoft.Json;
 using TicTacToe.BusinessComponent.Extensions;
 using TicTacToe.BusinessComponent.Models;
 using TicTacToe.BusinessComponent.Enum;
@@ -17,25 +19,21 @@ namespace TicTacToe.BusinessComponent.Services.Implementation
     {
         private readonly DataComponent.Services.IGameService _gameService;
         private readonly IFieldChecker _fieldChecker;
-        private readonly IBotService _botService;
         private readonly IStatisticService _statisticService;
         private readonly IMapper _mapper;
+        private readonly HttpClient _client;
 
-        public GameService(DataComponent.Services.IGameService gameService, IFieldChecker fieldChecker, IBotService botService, IStatisticService statisticService, IMapper mapper)
+        public GameService(DataComponent.Services.IGameService gameService, IFieldChecker fieldChecker,
+            IStatisticService statisticService, IMapper mapper, HttpClient httpClient)
         {
             this._gameService = gameService;
             this._fieldChecker = fieldChecker;
-            this._botService = botService;
             this._statisticService = statisticService;
             this._mapper = mapper;
+            this._client = httpClient;
         }
         public async Task<bool> CreateGameAsync(Models.Game game)
         {
-            if (game.IsPlayer2Bot && game.Player2Id.HasValue)
-            {
-                return false;
-            }
-
             try
             {
                 await _gameService.CreateGameAsync(_mapper.Map<DataComponent.Models.Game>(game));
@@ -72,6 +70,16 @@ namespace TicTacToe.BusinessComponent.Services.Implementation
             await win.FindWinnerAndLoser();
         }
 
+        private bool IsBot(Guid id)
+        {
+            var idStr = id.ToString().Replace("-", "");
+            for (int i = 1; i < idStr.Length; i++)
+                if (idStr[i] != idStr[0])
+                    return false;
+
+            return true;
+        }
+
         //TODO use cache or redis
         public async Task<CheckState> SavePlayerMoveAsync(Models.GameHistory newMove)
         {
@@ -79,19 +87,25 @@ namespace TicTacToe.BusinessComponent.Services.Implementation
             var history = gamHistory.Select(h => _mapper.Map<Models.GameHistory>(h));
             _game = await _gameService.GetGameByGameIdAsync(newMove.GameId);
 
+            var isBot = IsBot(newMove.PlayerId);
             if (_game is null)
             {
                 return CheckState.GameNotExist;
             }
+
+            var game = _mapper.Map<Models.Game>(_game);
 
             _fieldChecker.BoardInit(history);
             _fieldChecker.NextMove = newMove;
 
             var modelForSave = _mapper.Map<DataComponent.Models.GameHistory>(newMove);
 
-            if (_fieldChecker.GamePlayerCheck(_mapper.Map<Models.Game>(_game)))
+            if (!isBot)
             {
-                return CheckState.GamePlayerCheck;
+                if (_fieldChecker.GamePlayerCheck(game))
+                {
+                    return CheckState.GamePlayerCheck;
+                }
             }
 
             if (_fieldChecker.LastPlayerCheck())
@@ -99,7 +113,7 @@ namespace TicTacToe.BusinessComponent.Services.Implementation
                 return CheckState.PreviousPlayerCheck;
             }
 
-            if (_fieldChecker.EndGameCheck(_game.IsGameFinished))
+            if (_fieldChecker.EndGameCheck(game.IsGameFinished))
             {
                 return CheckState.EndGameCheck;
             }
@@ -136,73 +150,50 @@ namespace TicTacToe.BusinessComponent.Services.Implementation
 
             #endregion
 
-            if (!newMove.IsBot)
+            _fieldChecker.MakeMove();
+            await _gameService.SavePlayerMoveAsync(modelForSave);
+
+            if (_fieldChecker.LinesCheck())
             {
-                _fieldChecker.MakeMove();
-                await _gameService.SavePlayerMoveAsync(modelForSave);
-
-                if (_fieldChecker.LinesCheck())
-                {
-                    await WinnerLoser();
-                    return CheckState.LineCheck;
-                }
-
-                if (_fieldChecker.DCheck())
-                {
-                    await WinnerLoser();
-                    return CheckState.DiagonalCheck;
-                }
-
-                if (history.Count() + 1 > Math.Pow(IFieldChecker.BOARD_SIZE, 2))
-                {
-                    await SetGameAsFinished();
-                    await _statisticService.SaveStatisticAsync(GameResultWithBot(_game.Player1Id));
-                    if (!_game.IsPlayer2Bot)
-                    {
-                        await _statisticService.SaveStatisticAsync(GameResultWithBot(_game.Player2Id.Value));
-                    }
-                    return CheckState.EndGameCheck;
-                }
-                //TODO remove in future
-                if (_game.IsPlayer2Bot)
-                {
-                    return await BotMove(history, newMove, false);
-                }
-
-                return CheckState.None;
+                await WinnerLoser();
+                return CheckState.LineCheck;
             }
-            else
+
+            if (_fieldChecker.DCheck())
             {
-                return await BotMove(history, newMove, true);
+                await WinnerLoser();
+                return CheckState.DiagonalCheck;
             }
-        }
 
-        private async Task<CheckState> BotMove(IEnumerable<Models.GameHistory> history, Models.GameHistory newMove, bool isExternalBot)
-        {
-            _botService.Board = (char[,])_fieldChecker.Board.Clone();
-            _botService.GameHistory = newMove;
-            var result = _botService.MakeNextMove(isExternalBot);
-
-            if (result != CheckState.None)
+            if (history.Count() + 1 > Math.Pow(IFieldChecker.BOARD_SIZE, 2))
             {
                 await SetGameAsFinished();
-                await _statisticService.SaveStatisticAsync(new Models.GameResult
+                await _statisticService.SaveStatisticAsync(GameResultWithBot(game.Player1Id));
+                if (!isBot)
                 {
-                    Id = Guid.NewGuid(),
-                    GameId = _game.GameId,
-                    PlayerId = history.First().PlayerId.Value,
-                    Result = ResultStatus.Lost
-                });
-                return result;
-            }
-
-            if (history.Count() + 2 > Math.Pow(IFieldChecker.BOARD_SIZE, 2))
-            {
-                await SetGameAsFinished();
-                await _statisticService.SaveStatisticAsync(GameResultWithBot(_game.Player1Id));
-
+                    await _statisticService.SaveStatisticAsync(GameResultWithBot(game.Player2Id));
+                }
                 return CheckState.EndGameCheck;
             }
+
+            if (IsBot(game.Player2Id) || IsBot(game.Player1Id))
+            {
+                if (!isBot)
+                {
+                    var g = new
+                    {
+                        GameId = _game.GameId,
+                        Player1Id = _game.Player1Id,
+                        Player2Id = _game.Player2Id,
+                        IsGameFinished = _game.IsGameFinished,
+                        Board = _fieldChecker.Board
+                    };
+                    var json = JsonConvert.SerializeObject(g);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+                    await _client.PostAsync("api/bot/", content);
+                }
+            }
+
             return CheckState.None;
         }
 

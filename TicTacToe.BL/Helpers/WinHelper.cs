@@ -31,11 +31,21 @@ namespace TicTacToe.BusinessComponent.Helpers
             this._statisticService = statisticService;
         }
 
+        private bool IsBot(Guid id)
+        {
+            var idStr = id.ToString().Replace("-", "");
+            for (int i = 1; i < idStr.Length; i++)
+                if (idStr[i] != idStr[0])
+                    return false;
+
+            return true;
+        }
+
         public async Task FindWinnerAndLoser()
         {
             var res = GetWinner();
 
-            if (!_game.IsPlayer2Bot)
+            if (!IsBot(_game.Player2Id))
             {
                 await SaveGameResult(new Models.GameResult
                 {
@@ -70,10 +80,7 @@ namespace TicTacToe.BusinessComponent.Helpers
             var list = _board.Cast<char>();
             var x = list.Count(x => x == 'X');
             var y = list.Count(x => x == 'O');
-            if (!_game.IsPlayer2Bot)
-                return x > y ? (_game.Player1Id, _game.Player2Id.Value) : (_game.Player2Id.Value, _game.Player1Id);
-            else
-                return x > y ? (_game.Player1Id, Guid.Empty) : (Guid.Empty, _game.Player1Id);
+                return x > y ? (_game.Player1Id, _game.Player2Id) : (_game.Player2Id, _game.Player1Id);
         }
 
         public async Task SaveGameResult(Models.GameResult gameResult)

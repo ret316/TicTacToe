@@ -15,7 +15,7 @@ namespace TicTacToe.Tests.UnitTests
         [ClassData(typeof(FieldTestData1))]
         public void Test1_BoardInit(char[,] board, IEnumerable<GameHistory> list)
         {
-            IFieldChecker fieldChecker = new FIeldChecker();
+            IFieldChecker fieldChecker = new FieldChecker();
             fieldChecker.BoardInit(list);
 
             Assert.Equal(board, fieldChecker.Board);
@@ -25,7 +25,7 @@ namespace TicTacToe.Tests.UnitTests
         [ClassData(typeof(FieldTestData2))]
         public void Test2_LinesTest(IEnumerable<GameHistory> list)
         {
-            IFieldChecker fieldChecker = new FIeldChecker();
+            IFieldChecker fieldChecker = new FieldChecker();
             fieldChecker.BoardInit(list);
             Assert.False(fieldChecker.LinesCheck());
         }
@@ -34,7 +34,7 @@ namespace TicTacToe.Tests.UnitTests
         [ClassData(typeof(FieldTestData2))]
         public void Test3_Diagonals(IEnumerable<GameHistory> list)
         {
-            IFieldChecker fieldChecker = new FIeldChecker();
+            IFieldChecker fieldChecker = new FieldChecker();
             fieldChecker.BoardInit(list);
             Assert.False(fieldChecker.DCheck());
         }
@@ -43,7 +43,7 @@ namespace TicTacToe.Tests.UnitTests
         [ClassData(typeof(FieldTestData4))]
         public void Test4_DoubleCell(GameHistory bh0, IEnumerable<GameHistory> bgh3, IEnumerable<GameHistory> bgh4)
         {
-            IFieldChecker fieldChecker = new FIeldChecker();
+            IFieldChecker fieldChecker = new FieldChecker();
             
             fieldChecker.BoardInit(bgh4);
             fieldChecker.NextMove = bh0;
@@ -58,7 +58,7 @@ namespace TicTacToe.Tests.UnitTests
         [ClassData(typeof(FieldTestData5))]
         public void Test5_Index(GameHistory bh0, GameHistory bh1, IEnumerable<GameHistory> bgh4)
         {
-            IFieldChecker fieldChecker = new FIeldChecker();
+            IFieldChecker fieldChecker = new FieldChecker();
 
             fieldChecker.BoardInit(bgh4);
             fieldChecker.NextMove = bh0;
@@ -73,7 +73,7 @@ namespace TicTacToe.Tests.UnitTests
         [ClassData(typeof(FieldTestData6))]
         public void Test6_EndGameTest(IEnumerable<GameHistory> bgh3)
         {
-            IFieldChecker fieldChecker = new FIeldChecker();
+            IFieldChecker fieldChecker = new FieldChecker();
 
             fieldChecker.BoardInit(bgh3);
             Assert.True(fieldChecker.EndGameCheck(true));
@@ -83,7 +83,7 @@ namespace TicTacToe.Tests.UnitTests
         [ClassData(typeof(FieldTestData7))]
         public void Test7_LastPlayer(IEnumerable<GameHistory> bgh0, GameHistory bh0)
         {
-            IFieldChecker fieldChecker = new FIeldChecker();
+            IFieldChecker fieldChecker = new FieldChecker();
 
             fieldChecker.BoardInit(bgh0);
             fieldChecker.NextMove = bh0;
@@ -94,7 +94,7 @@ namespace TicTacToe.Tests.UnitTests
         [ClassData(typeof(FieldTestData8))]
         public void Test8_PlayerTest(IEnumerable<GameHistory> bgh0, GameHistory bh2, GameHistory bh3, Game bg0, Game bg1)
         {
-            IFieldChecker _fieldChecker = new FIeldChecker();
+            IFieldChecker _fieldChecker = new FieldChecker();
 
             _fieldChecker.BoardInit(bgh0);
             _fieldChecker.NextMove = bh2;

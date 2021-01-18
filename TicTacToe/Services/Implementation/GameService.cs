@@ -26,7 +26,6 @@ namespace TicTacToe.WebApi.Services.Implementation
             {
                 Player1Id = game.Player1Id,
                 Player2Id = game.Player2Id,
-                IsPlayer2Bot = game.IsPlayer2Bot
             });
         }
 

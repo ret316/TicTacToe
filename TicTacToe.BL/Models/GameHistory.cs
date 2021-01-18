@@ -18,11 +18,11 @@ namespace TicTacToe.BusinessComponent.Models
         /// <summary>
         /// Player id, if not bot move
         /// </summary>
-        public Guid? PlayerId { get; set; }
-        /// <summary>
-        /// Is player bot
-        /// </summary>
-        [Required] public bool IsBot { get; set; }
+        public Guid PlayerId { get; set; }
+        ///// <summary>
+        ///// Is player bot
+        ///// </summary>
+        //[Required] public bool IsBot { get; set; }
         /// <summary>
         /// X axis
         /// </summary>

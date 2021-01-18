@@ -17,7 +17,7 @@ namespace TicTacToe.Tests.UnitTests
     {
         public IBotService GetService(Mock<DataComponent.Services.IGameService> mock)
         {
-            IFieldChecker fieldChecker = new FIeldChecker();
+            IFieldChecker fieldChecker = new FieldChecker();
 
             return new BotService(fieldChecker, mock.Object);
         }

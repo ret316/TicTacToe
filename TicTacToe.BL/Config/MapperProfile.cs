@@ -22,7 +22,7 @@ namespace TicTacToe.BusinessComponent.Config
                 .ForMember(g => g.Id, g2 => g2.MapFrom(g3 => Guid.NewGuid()))
                 .ForMember(g => g.GameId, g2 => g2.MapFrom(g3 => g3.GameId))
                 .ForMember(g => g.PlayerId, g2 => g2.MapFrom(g3 => g3.PlayerId))
-                .ForMember(g => g.IsBot, g2 => g2.MapFrom(g3 => g3.IsBot))
+                //.ForMember(g => g.IsBot, g2 => g2.MapFrom(g3 => g3.IsBot))
                 .ForMember(g => g.XAxis, g2 => g2.MapFrom(g3 => g3.XAxis))
                 .ForMember(g => g.YAxis, g2 => g2.MapFrom(g3 => g3.YAxis))
                 .ForMember(g => g.MoveDate, g2 => g2.MapFrom(g3 => g3.MoveDate));
@@ -43,7 +43,7 @@ namespace TicTacToe.BusinessComponent.Config
                 .ForMember(g => g.GameId, g2 => g2.MapFrom(g3 => Guid.NewGuid()))
                 .ForMember(g => g.Player1Id, g2 => g2.MapFrom(g3 => g3.Player1Id))
                 .ForMember(g => g.Player2Id, g2 => g2.MapFrom(g3 => g3.Player2Id))
-                .ForMember(g => g.IsPlayer2Bot, g2 => g2.MapFrom(g3 => g3.IsPlayer2Bot))
+                //.ForMember(g => g.IsPlayer2Bot, g2 => g2.MapFrom(g3 => g3.IsPlayer2Bot))
                 .ForMember(g => g.IsGameFinished, g2 => g2.MapFrom(g3 => false));
 
             CreateMap<DataModel.Game, BusinessModel.Game>();

@@ -9,11 +9,11 @@ using TicTacToe.BusinessComponent.Extensions;
 
 namespace TicTacToe.BusinessComponent.Services.Implementation
 {
-    public class FIeldChecker : IFieldChecker
+    public class FieldChecker : IFieldChecker
     {
         private IEnumerable<Models.GameHistory> _gameHistory;
         private Models.GameHistory _nextMove;
-        private Guid? _firstPlayerId;
+        private Guid _firstPlayerId;
         public char[,] Board { get; set; }
         public Models.GameHistory NextMove
         {
@@ -77,14 +77,14 @@ namespace TicTacToe.BusinessComponent.Services.Implementation
 
         public void MakeMove()
         {
-            if (_firstPlayerId.HasValue)
-            {
-                Board[_nextMove.YAxis, _nextMove.XAxis] = _firstPlayerId.Value == _nextMove.PlayerId ? 'X' : 'O';
-            }
-            else
-            {
-                Board[_nextMove.YAxis, _nextMove.XAxis] = 'X';
-            }
+            //if (_firstPlayerId.HasValue)
+            //{
+                Board[_nextMove.YAxis, _nextMove.XAxis] = _firstPlayerId == _nextMove.PlayerId ? 'X' : 'O';
+            //}
+            //else
+            //{
+            //    Board[_nextMove.YAxis, _nextMove.XAxis] = 'X';
+            //}
         }
 
         public bool LastPlayerCheck()
@@ -97,13 +97,13 @@ namespace TicTacToe.BusinessComponent.Services.Implementation
                     return true;
                 }
 
-                if (last.IsBot == _nextMove.IsBot)
-                {
-                    if (last.IsBot)
-                    {
-                        return true;
-                    }
-                }
+                //if (last.IsBot == _nextMove.IsBot)
+                //{
+                //    if (last.IsBot)
+                //    {
+                //        return true;
+                //    }
+                //}
             }
 
             return false;
@@ -111,16 +111,18 @@ namespace TicTacToe.BusinessComponent.Services.Implementation
 
         public bool GamePlayerCheck(Models.Game game)
         {
-            if (_nextMove.IsBot)
-            {
-                return !game.IsPlayer2Bot;
-            }
+            return _nextMove.PlayerId != game.Player1Id && _nextMove.PlayerId != game.Player2Id;
 
-            if (game.Player2Id.HasValue)
-            {
-                return _nextMove.PlayerId != game.Player1Id && _nextMove.PlayerId != game.Player2Id.Value;
-            }
-            return _nextMove.PlayerId != game.Player1Id;
+            //if (_nextMove.IsBot)
+            //{
+            //    return !game.IsPlayer2Bot;
+            //}
+
+            //if (game.Player2Id.HasValue)
+            //{
+            //    return _nextMove.PlayerId != game.Player1Id && _nextMove.PlayerId != game.Player2Id.Value;
+            //}
+            //return _nextMove.PlayerId != game.Player1Id;
         }
     }
 }

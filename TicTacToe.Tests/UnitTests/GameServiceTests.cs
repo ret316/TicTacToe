@@ -26,7 +26,7 @@ namespace TicTacToe.Tests.UnitTests
                 mock2 = new Mock<BusinessComponent.Services.IStatisticService>();
             if (mock3 is null)
                 mock3 = new Mock<IBotService>();
-            IFieldChecker _fieldChecker = new FIeldChecker();
+            IFieldChecker _fieldChecker = new FieldChecker();
             var config = new MapperConfiguration(cfg => cfg.AddProfile(new MapperProfile()));
             IMapper _mapper = new Mapper(config);
 

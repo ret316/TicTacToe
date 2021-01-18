@@ -2,17 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace TicTacToe.DataComponent.Models
+namespace TicTacToe.Bot.BusinessComponent.Models
 {
-    /// <summary>
-    /// Game model in data layer
-    /// </summary>
-    public class Game
+    public class GameState
     {
-        /// <summary>
-        /// id
-        /// </summary>
-        public Guid Id { get; set; }
         /// <summary>
         /// Game id
         /// </summary>
@@ -25,13 +18,13 @@ namespace TicTacToe.DataComponent.Models
         /// Player 2 id
         /// </summary>
         public Guid Player2Id { get; set; }
-        ///// <summary>
-        ///// Is game with bot
-        ///// </summary>
-        //public bool IsPlayer2Bot { get; set; }
         /// <summary>
         /// Is game ended, not used in creation
         /// </summary>
         public bool IsGameFinished { get; set; }
+        /// <summary>
+        /// Game board
+        /// </summary>
+        public char[,] Board { get; set; }
     }
 }

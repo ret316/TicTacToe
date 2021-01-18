@@ -25,11 +25,11 @@ namespace TicTacToe.BusinessComponent.Models
         /// <summary>
         /// Player 2 id
         /// </summary>
-        public Guid? Player2Id { get; set; }
-        /// <summary>
-        /// Is game with bot
-        /// </summary>
-        [Required] public bool IsPlayer2Bot { get; set; }
+        public Guid Player2Id { get; set; }
+        ///// <summary>
+        ///// Is game with bot
+        ///// </summary>
+        //[Required] public bool IsPlayer2Bot { get; set; }
         /// <summary>
         /// Is game ended, not used in creation
         /// </summary>

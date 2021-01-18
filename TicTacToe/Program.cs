@@ -20,6 +20,7 @@ namespace TicTacToe
             {
                 using IHost host = CreateHostBuilder(args).Build();
                 host.Run();
+                Log.Information("Api started");
             }
             catch (Exception ex)
             {
@@ -37,8 +38,6 @@ namespace TicTacToe
             {
                 Log.CloseAndFlush();
             }
-
-
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
