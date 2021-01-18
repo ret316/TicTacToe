@@ -55,7 +55,6 @@ namespace TicTacToe.BusinessComponent.Extensions
             });
             services.AddScoped<IFieldChecker, FieldChecker>();
             services.AddScoped<IStatisticService, StatisticService>();
-            services.AddScoped<IBotService, BotService>();
             return services;
         }
     }
